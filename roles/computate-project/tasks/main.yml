@@ -1,0 +1,79 @@
+---
+- name: "Install dependencies as user: {{ SITE_DEPENDENCIES | join(' ') }}"
+  shell: "pkcon install -y {{ item }} | true"
+  loop: "{{ SITE_DEPENDENCIES }}"
+  ignore_errors: true
+
+- name: Check if git binary exists
+  stat:
+    path: /usr/bin/git
+  register: GIT_EXISTS
+- name: Check if javac binary exists
+  stat:
+    path: /usr/bin/javac
+  register: JAVAC_EXISTS
+
+###############
+# Project dir #
+###############
+
+- name: Check for the {{ SITE_NAME }} .git directory
+  stat:
+    path: "{{ SITE_SRC }}/.git"
+  register: SITE_GIT_DIR
+- name: Check for the {{ SITE_NAME }} README.md file
+  stat:
+    path: "{{ SITE_SRC }}/README.md"
+  register: SITE_README
+- name: Create the {{ SITE_NAME }} source directory {{ SITE_SRC }}
+  file:
+    name: "{{ SITE_SRC }}"
+    state: directory
+  when: not SITE_GIT_DIR.stat.exists and not SITE_README.stat.exists
+- name: Clone the {{ SITE_REPO }} source code into {{ SITE_SRC }}
+  git:
+    repo: "{{ SITE_REPO }}"
+    dest: "{{ SITE_SRC }}"
+  when: not SITE_GIT_DIR.stat.exists and not SITE_README.stat.exists
+  ignore_errors: true
+
+##############
+# Static dir #
+##############
+
+- name: Check for the {{ SITE_STATIC_NAME }} .git directory
+  stat:
+    path: "{{ SITE_SRC }}-static/.git"
+  register: SITE_STATIC_GIT_DIR
+- name: Create the {{ SITE_STATIC_NAME }} source directory {{ SITE_SRC }}-static
+  file:
+    name: "{{ SITE_SRC }}-static"
+    state: directory
+  when: not SITE_STATIC_GIT_DIR.stat.exists
+- name: Clone the {{ SITE_STATIC_REPO }} source code into {{ SITE_SRC }}-static
+  git:
+    repo: "{{ SITE_STATIC_REPO }}"
+    dest: "{{ SITE_SRC }}-static"
+  when: not SITE_STATIC_GIT_DIR.stat.exists
+  ignore_errors: true
+
+- name: Query Apache Solr for all Java classes
+  uri: 
+    url: "{{ SOLR_URL_COMPUTATE }}/select?rows=300&q=*:*&fq=partEstClasse_indexed_boolean:true&fq=siteNom_indexed_string:smartabyar-smartvillage&fq=classeApiMethodes_enUS_indexed_strings:SearchPage&fq=-classeNomSimple_enUS_indexed_string:SiteUser&sort=classSort_indexed_int%20asc"
+    url_username: "{{ SOLR_USERNAME }}"
+    url_password: "{{ SOLR_PASSWORD }}"
+    validate_certs: false
+  register: JAVA_CLASSES_RESPONSE
+- name: 
+  set_fact: 
+    JAVA_CLASSES: "{{ JAVA_CLASSES_RESPONSE.json.response.docs }}"
+
+#####################
+# Build application #
+#####################
+
+- name: Build the source code in {{ SITE_SRC }}
+  shell: "mvn clean install -DskipTests"
+  args:
+    chdir: "{{ SITE_SRC }}"
+  when: MAVEN | default('true') | bool
