@@ -10,6 +10,7 @@ import re
 import kubernetes
 import base64
 from openshift.dynamic import DynamicClient
+from distutils.util import strtobool
 
 def split(str, separator):
     return str.split(separator)
@@ -23,8 +24,14 @@ def dirname(path):
 def realpath(path):
     return os.path.realpath(path)
 
-def b64decode(str):
-    return base64.b64decode(str).decode("utf-8")
+def b64decode(s):
+    return base64.b64decode(s).decode("utf-8")
+
+def to_bool(s):
+    if s == None:
+        return False
+    else:
+        return bool(strtobool(str(s)))
 
 def lookup(lookup, arg1, errors='strict'):
     if lookup == 'env':
@@ -81,11 +88,6 @@ if __name__ == '__main__':
     parser.add_argument('path', nargs='?', default='vars.yaml', help='the path to the vars.yaml file for the project to generate')
     args = parser.parse_args()
 
-    filters = {
-        "basename": basename
-        , "dirname": dirname
-    }
-
     config = {}
     vars_path = pathlib.Path(args.path).resolve()
     vars_str = vars_path.read_text()
@@ -105,6 +107,7 @@ if __name__ == '__main__':
                 t.environment.filters['dirname'] = dirname
                 t.environment.filters['realpath'] = realpath
                 t.environment.filters['b64decode'] = b64decode
+                t.environment.filters['bool'] = to_bool
                 t.environment.globals.update(lookup = lookup)
                 t.environment.globals.update(query = query)
                 new_data[k] = t.render(**new_data)
