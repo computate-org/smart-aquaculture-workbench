@@ -89,8 +89,9 @@ import com.rabbitmq.client.AMQP.BasicProperties;
 import io.vertx.amqp.AmqpMessage;
 import io.vertx.amqp.AmqpMessageBuilder;
 import io.vertx.amqp.AmqpSenderOptions;
+import io.vertx.pgclient.PgBuilder;
 import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.pgclient.PgPool;
+import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.Cursor;
 import io.vertx.sqlclient.PoolOptions;
 import io.vertx.sqlclient.Row;
@@ -134,13 +135,13 @@ public class WorkerVerticle extends WorkerVerticleGen<AbstractVerticle> {
 	/**
 	 * A io.vertx.ext.jdbc.JDBCClient for connecting to the relational database PostgreSQL. 
 	 **/
-	private PgPool pgPool;
+	private Pool pgPool;
 
-	public PgPool getPgPool() {
+	public Pool getPgPool() {
 		return pgPool;
 	}
 
-	public void setPgPool(PgPool pgPool) {
+	public void setPgPool(Pool pgPool) {
 		this.pgPool = pgPool;
 	}
 
@@ -312,7 +313,7 @@ public class WorkerVerticle extends WorkerVerticleGen<AbstractVerticle> {
 			poolOptions.setMaxSize(jdbcMaxPoolSize);
 			poolOptions.setMaxWaitQueueSize(config().getInteger(ConfigKeys.DATABASE_MAX_WAIT_QUEUE_SIZE, 10));
 
-			pgPool = PgPool.pool(vertx, pgOptions, poolOptions);
+			pgPool = PgBuilder.pool().connectingTo(pgOptions).with(poolOptions).using(vertx).build();
 
 			LOG.info(configureDataInitSuccess);
 			promise.complete();

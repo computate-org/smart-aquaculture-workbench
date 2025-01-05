@@ -166,9 +166,11 @@ import io.vertx.ext.web.sstore.LocalSessionStore;
 import io.vertx.kafka.client.producer.KafkaProducer;
 import io.vertx.mqtt.MqttClient;
 import io.vertx.pgclient.PgConnectOptions;
-import io.vertx.pgclient.PgPool;
+import io.vertx.pgclient.PgBuilder;
 import io.vertx.spi.cluster.zookeeper.ZookeeperClusterManager;
+import io.vertx.sqlclient.Pool;
 import io.vertx.sqlclient.PoolOptions;
+import io.vertx.sqlclient.Transaction;
 import io.vertx.sqlclient.Tuple;
 import io.vertx.tracing.opentelemetry.OpenTelemetryOptions;
 import io.vertx.tracing.opentracing.OpenTracingTracerFactory;
@@ -183,9 +185,7 @@ import {{ SITE_BASE_MODEL_PACKAGE }}.BaseModel;
 {% for JAVA_MODEL in JAVA_MODELS %}
 import {{ JAVA_MODEL.classeNomCanoniqueGenApiService_enUS_stored_string }};
 import {{ JAVA_MODEL.classeNomCanoniqueApiServiceImpl_enUS_stored_string }};
-{% if JAVA_MODEL.classeUriPageAffichage_enUS_stored_string is defined or JAVA_MODEL.classeUriPageUtilisateur_enUS_stored_string is defined %}
 import {{ JAVA_MODEL.classeNomCanonique_enUS_stored_string }};
-{% endif %}
 {% endfor %}
 
 
@@ -210,7 +210,7 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 	/**
 	 * A io.vertx.ext.jdbc.JDBCClient for connecting to the relational database PostgreSQL. 
 	 **/
-	private PgPool pgPool;
+	private Pool pgPool;
 
 	private WebClient webClient;
 
@@ -277,8 +277,10 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 					api.initDeepOpenApi3Generator(siteRequest);
 					if(runOpenApi3Generator)
 						future = future.compose(a -> api.writeOpenApi());
-					if(runSqlGenerator)
+					if(runSqlGenerator) {
 						future = future.compose(a -> api.writeSql());
+						future = future.compose(a -> configureDatabaseSchema(vertx, config));
+					}
 					if(runFiwareGenerator)
 						future = future.compose(a -> api.writeFiware());
 					if(runProjectGenerator)
@@ -304,6 +306,88 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 			LOG.error(String.format("Error loading config: %s", configVarsPath), ex);
 			vertx.close();
 		});
+	}
+
+	/**	
+	 *	Configure shared database connections across the cluster for massive scaling of the application. 
+	 *	Return a promise that configures a shared database client connection. 
+	 *	Load the database configuration into a shared io.vertx.ext.jdbc.JDBCClient for a scalable, clustered datasource connection pool. 
+	 **/
+	public static Future<Void> configureDatabaseSchema(Vertx vertx, JsonObject config) {
+		Promise<Void> promise = Promise.promise();
+		try {
+			if(config.getBoolean(ConfigKeys.ENABLE_DATABASE, true)) {
+				PgConnectOptions pgOptions = new PgConnectOptions();
+				pgOptions.setPort(config.getInteger(ConfigKeys.DATABASE_PORT));
+				pgOptions.setHost(config.getString(ConfigKeys.DATABASE_HOST));
+				pgOptions.setDatabase(config.getString(ConfigKeys.DATABASE_DATABASE));
+				pgOptions.setUser(config.getString(ConfigKeys.DATABASE_USERNAME));
+				pgOptions.setPassword(config.getString(ConfigKeys.DATABASE_PASSWORD));
+				pgOptions.setIdleTimeout(config.getInteger(ConfigKeys.DATABASE_MAX_IDLE_TIME, 10));
+				pgOptions.setIdleTimeoutUnit(TimeUnit.SECONDS);
+				pgOptions.setConnectTimeout(config.getInteger(ConfigKeys.DATABASE_CONNECT_TIMEOUT, 1000));
+
+				PoolOptions poolOptions = new PoolOptions();
+				poolOptions.setMaxSize(config.getInteger(ConfigKeys.DATABASE_MAX_POOL_SIZE, 1));
+				poolOptions.setMaxWaitQueueSize(config.getInteger(ConfigKeys.DATABASE_MAX_WAIT_QUEUE_SIZE, 10));
+
+				Pool pgPool = PgBuilder.pool().connectingTo(pgOptions).with(poolOptions).using(vertx).build();
+				Promise<Void> promise1 = Promise.promise();
+				pgPool.withConnection(sqlConnection -> {
+					try {
+						String sqlPath = String.format("%s/src/main/resources/sql/db-create.sql", config.getString(ConfigKeys.SITE_SRC));
+						vertx.fileSystem().readFile(sqlPath).onSuccess(buffer -> {
+							Future<Transaction> transactionFuture = sqlConnection.begin();
+							String sql = buffer.toString();
+							List<Future<String>> futures = new ArrayList<>();
+							List<String> nonBlankLines = Arrays.stream(sql.split("\n"))
+									.filter(line -> !line.trim().isEmpty())
+									.collect(Collectors.toList());
+							for(String line : nonBlankLines) {
+								LOG.info(line);
+								transactionFuture.compose(transaction -> 
+									sqlConnection.preparedQuery(line)
+											.execute(Tuple.tuple())
+								);
+							}
+
+							transactionFuture.onSuccess(transaction -> {
+								transaction.commit().onSuccess(c -> {
+									LOG.info("All database schema statements ran successfully.");
+									promise.complete();
+								}).onFailure(ex -> {
+									LOG.error("Could not initialize the database schema.", ex);
+									promise.fail(ex);
+								});
+							}).onFailure(ex -> {
+								LOG.error("Could not initialize the database schema.", ex);
+								promise.fail(ex);
+							});
+						}).onFailure(ex -> {
+							LOG.error("Could not initialize the database schema.", ex);
+							promise.fail(ex);
+						});
+					} catch (Exception ex) {
+						LOG.error("Could not initialize the database schema.", ex);
+						promise.fail(ex);
+					}
+					return promise1.future();
+				}).onSuccess(a -> {
+					LOG.info("The database schema initialization was completed successfully.");
+					promise.complete();
+				}).onFailure(ex -> {
+					LOG.error("Could not initialize the database schema.", ex);
+					promise.fail(ex);
+				});
+			} else {
+				promise.complete();
+			}
+		} catch (Exception ex) {
+			LOG.error("Could not initialize the database schema.", ex);
+			promise.fail(ex);
+		}
+
+		return promise.future();
 	}
 
 	public static void  runOpenApi3Generator(String[] args, Vertx vertx, JsonObject config) {
@@ -852,7 +936,7 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 				poolOptions.setMaxSize(jdbcMaxPoolSize);
 				poolOptions.setMaxWaitQueueSize(jdbcMaxWaitQueueSize);
 
-				pgPool = PgPool.pool(vertx, pgOptions, poolOptions);
+				pgPool = PgBuilder.pool().connectingTo(pgOptions).with(poolOptions).using(vertx).build();
 				Promise<Void> promise1 = Promise.promise();
 				pgPool.withConnection(sqlConnection -> {
 					sqlConnection.preparedQuery("SELECT")
@@ -1250,7 +1334,6 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 			apiSiteUser.configureUserSearchApi(config().getString(ComputateConfigKeys.USER_SEARCH_URI), router, SiteRequest.class, SiteUser.class, SiteUser.CLASS_API_ADDRESS_SiteUser, config(), webClient, authResources);
 			apiSiteUser.configurePublicSearchApi(config().getString(ComputateConfigKeys.PUBLIC_SEARCH_URI), router, SiteRequest.class, config(), webClient, publicResources);
 {% for JAVA_MODEL in JAVA_MODELS %}
-{% if JAVA_MODEL.classeUriPageAffichage_enUS_stored_string is defined or JAVA_MODEL.classeUriPageUtilisateur_enUS_stored_string is defined %}
 
 			{{ JAVA_MODEL.classeNomSimpleApiServiceImpl_enUS_stored_string }} api{{ JAVA_MODEL.classeNomSimple_enUS_stored_string }} = new {{ JAVA_MODEL.classeNomSimpleApiServiceImpl_enUS_stored_string }}();
 			initializeApiService(api{{ JAVA_MODEL.classeNomSimple_enUS_stored_string }});
@@ -1268,7 +1351,6 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 {% else %}
 // 
 			// {{ JAVA_MODEL.classeNomSimpleGenApiService_enUS_stored_string }}.registerService(vertx, config(), workerExecutor, oauth2AuthHandler, pgPool, kafkaProducer, mqttClient, amqpSender, rabbitmqClient, webClient, oauth2AuthenticationProvider, authorizationProvider, jinjava);
-{% endif %}
 {% endfor %}
 
 			Future.all(futures).onSuccess( a -> {
@@ -1845,11 +1927,11 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 		this.jdbcMaxWaitQueueSize = jdbcMaxWaitQueueSize;
 	}
 
-	public PgPool getPgPool() {
+	public Pool getPgPool() {
 		return pgPool;
 	}
 
-	public void setPgPool(PgPool pgPool) {
+	public void setPgPool(Pool pgPool) {
 		this.pgPool = pgPool;
 	}
 
