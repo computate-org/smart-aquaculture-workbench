@@ -3,6 +3,15 @@
   /* Mobile mode */
   .hide-mobile {display: none;}
 {% if WEB_COMPONENTS_PREFIX == 'wa-' %}
+body {
+  opacity: 0;
+}
+
+body.ready {
+  opacity: 1;
+  transition: 0.25s opacity;
+}
+
 main, footer {
   padding-inline: var(--site-secondary-space);
 }
@@ -89,7 +98,7 @@ main, footer {
 :root,
 :host,
 .wa-theme-default-{{ SITE_THEME }} {
-  --wa-color-brand-fill-quiet: var(--wa-color-violet-95);
+  --wa-color-brand-fill-quiet: var(--wa-color-violet-10);
   --wa-color-brand-fill-normal: var(--wa-color-violet-90);
   --wa-color-brand-fill-loud: var(--wa-color-violet-50);
   --wa-color-brand-border-quiet: var(--wa-color-violet-90);
