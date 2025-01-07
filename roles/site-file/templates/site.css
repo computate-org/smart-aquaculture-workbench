@@ -48,6 +48,11 @@ main, footer {
 main, footer {
   padding-inline: var(--content-padding-inline);
 }
+footer {
+  wa-button {
+    width: 100%;
+  }
+}
 {% else %}
   #site-grid {
     display: grid;
@@ -158,7 +163,7 @@ main, footer {
 
   /* Element variables */
   --main-logo-width: 300px;
-  --footer-logo-height: var(--wa-font-size-l);
+  --footer-logo-height: var(--wa-font-size-xl);
   --icon-button-size: 2rem;
 
   --site-primary-border-radius: var(--wa-border-radius-l);

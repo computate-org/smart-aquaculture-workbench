@@ -52,7 +52,7 @@
           filters.push({ name: 'q', value: 'objectSuggest:' + event.target.value });
 
         fetch(
-          '\{\{ PUBLIC_SEARCH_URI \}\}?' + filters.map(function(m) { return m.name + '=' + encodeURIComponent(m.value) }).join('&')
+          '\{\{ USER_SEARCH_URI if userName is defined else PUBLIC_SEARCH_URI \}\}?' + filters.map(function(m) { return m.name + '=' + encodeURIComponent(m.value) }).join('&')
           , {
             headers: {'Content-Type':'application/json; charset=utf-8'}
           }).then(response => {
@@ -118,7 +118,7 @@
 {% else %}
       <aside id="site-aside-left" class="hide-mobile margin-block-end-1rem ">
         <{{ WEB_COMPONENTS_PREFIX }}button id="site-aside-left-close-button" label="Close" data-drawer="close" class="hide-desktop">
-          <i slot="prefix" class="fas fa-xmark"></i>
+          <i slot="prefix" class="{{ FONTAWESOME_STYLE }} fa-xmark"></i>
         </{{ WEB_COMPONENTS_PREFIX }}button>
 {% endif %}
         <nav>
@@ -144,13 +144,13 @@
               <div>
                 <{{ WEB_COMPONENTS_PREFIX }}tooltip content="see or change your user profile">
                   <{{ WEB_COMPONENTS_PREFIX }}button{% if WEB_COMPONENTS_PREFIX == 'wa-' %} variant="brand"{% else %}{% endif %} href="/user" label="see or change your user profile">
-                    <i slot="prefix" class="fad fa-house-user"></i>
+                    <i slot="prefix" class="{{ FONTAWESOME_STYLE }} fa-house-user"></i>
                     <span>my user page</span>
                   </{{ WEB_COMPONENTS_PREFIX }}button>
                 </{{ WEB_COMPONENTS_PREFIX }}tooltip>
                 <{{ WEB_COMPONENTS_PREFIX }}tooltip placement="right" content="sign out">
                   <{{ WEB_COMPONENTS_PREFIX }}button{% if WEB_COMPONENTS_PREFIX == 'wa-' %} variant="brand"{% else %}{% endif %} href="\{\{ logoutUrl \}\}" label="sign out">
-                    <i slot="prefix" class="fa-duotone fa-person-from-portal"></i>
+                    <i slot="prefix" class="{{ FONTAWESOME_STYLE }} fa-person-from-portal"></i>
                     <span>sign out</span>
                   </{{ WEB_COMPONENTS_PREFIX }}button>
                 </{{ WEB_COMPONENTS_PREFIX }}tooltip>
@@ -158,7 +158,7 @@
             </{{ WEB_COMPONENTS_PREFIX }}details>
 \{\%- else \%\}
             <{{ WEB_COMPONENTS_PREFIX }}button{% if WEB_COMPONENTS_PREFIX == 'wa-' %} variant="brand"{% else %}{% endif %} href="\{\{ SITE_BASE_URL \}\}/user">
-              <i class="fa-duotone fa-person-to-portal"></i> login
+              <i class="{{ FONTAWESOME_STYLE }} fa-person-to-portal"></i> login
             </{{ WEB_COMPONENTS_PREFIX }}button>
 \{\%- endif \%\}
           </div>
@@ -187,9 +187,9 @@
       </aside>
       <main>
         <header class="margin-block flex gap-m align-items-center">
-          <{{ WEB_COMPONENTS_PREFIX }}icon-button data-toggle-nav name="bars" class="nav-toggle-button hide-desktop" class="hide-desktop " label="open menu" appearance="text"></{{ WEB_COMPONENTS_PREFIX }}icon-button>
+          <{{ WEB_COMPONENTS_PREFIX }}icon-button data-toggle-nav name="bars" class="nav-toggle-button hide-desktop " label="open menu" appearance="text"></{{ WEB_COMPONENTS_PREFIX }}icon-button>
           <{{ WEB_COMPONENTS_PREFIX }}input placeholder="search" id="siteSearchInput">
-            <i slot="prefix" class="fa-light fa-magnifying-glass"></i>
+            <i slot="prefix" class="{{ FONTAWESOME_STYLE }} fa-magnifying-glass"></i>
           </{{ WEB_COMPONENTS_PREFIX }}input>
         </header>
         <{{ WEB_COMPONENTS_PREFIX }}dropdown id="siteSearchDropdown" class="display-block ">
@@ -207,7 +207,7 @@
       <footer class="flex flex-column round-row primary-smart-border-radius" slot="main-footer">
         \{\% if GITHUB_ORG is defined \%\}
         <{{ WEB_COMPONENTS_PREFIX }}button{% if WEB_COMPONENTS_PREFIX == 'wa-' %} variant="brand"{% else %}{% endif %} size="large" href="https://github.com/\{\{ GITHUB_ORG \}\}/\{\{ SITE_NAME \}\}/" target="_blank">
-          This site is <b><i class="fa-brands fa-github"></i> open source</b>.
+          This site is <b><i class="fa-brands fa-github fa-xl"></i> open source</b>.
         </{{ WEB_COMPONENTS_PREFIX }}button>
         \{\% endif \%\}
         <{{ WEB_COMPONENTS_PREFIX }}button{% if WEB_COMPONENTS_PREFIX == 'wa-' %} variant="brand"{% else %}{% endif %} size="large" id="footer-generated-by" href="https://www.computate.org/" target="_blank">
@@ -215,7 +215,7 @@
         </{{ WEB_COMPONENTS_PREFIX }}button>
         \{\% if SITE_POWERED_BY_URL is defined \%\}
         <{{ WEB_COMPONENTS_PREFIX }}button{% if WEB_COMPONENTS_PREFIX == 'wa-' %} variant="brand"{% else %}{% endif %} size="large" id="footer-powered-by" href="\{\{ SITE_POWERED_BY_URL \}\}" target="_blank">
-          Powered by <b>{{ SITE_POWERED_BY_IMAGE }} \{\{ SITE_POWERED_BY_NAME | e \}\}</b>
+          Powered by <i class="fa-brands fa-redhat fa-xl" style="color: #ff0000;"></i> <b>\{\{ SITE_POWERED_BY_NAME | e \}\}</b>
         </{{ WEB_COMPONENTS_PREFIX }}button>
         \{\% endif \%\}
       </footer>
