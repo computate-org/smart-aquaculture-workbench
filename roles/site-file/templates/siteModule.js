@@ -1,6 +1,3 @@
-
-{% if WEB_COMPONENTS_PREFIX == 'wa-' %}
-{% endif %}
 Promise.all([
   customElements.whenDefined('sl-button')
   , customElements.whenDefined('sl-input')

@@ -262,6 +262,7 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 				WebClient webClient = WebClient.create(vertx, new WebClientOptions().setVerifyHost(sslVerify).setTrustAll(!sslVerify));
 				Boolean runOpenApi3Generator = Optional.ofNullable(config.getBoolean(ConfigKeys.RUN_OPENAPI3_GENERATOR)).orElse(false);
 				Boolean runSqlGenerator = Optional.ofNullable(config.getBoolean(ConfigKeys.RUN_SQL_GENERATOR)).orElse(false);
+				Boolean runAuthorizationGenerator = Optional.ofNullable(config.getBoolean(ConfigKeys.RUN_AUTHORIZATION_GENERATOR)).orElse(false);
 				Boolean runFiwareGenerator = Optional.ofNullable(config.getBoolean(ConfigKeys.RUN_FIWARE_GENERATOR)).orElse(false);
 				Boolean runProjectGenerator = Optional.ofNullable(config.getBoolean(ConfigKeys.RUN_PROJECT_GENERATOR)).orElse(false);
 
@@ -281,6 +282,8 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 						future = future.compose(a -> api.writeSql());
 						future = future.compose(a -> configureDatabaseSchema(vertx, config));
 					}
+					if(runAuthorizationGenerator)
+						future = future.compose(a -> authorizeData(vertx, config, webClient));
 					if(runFiwareGenerator)
 						future = future.compose(a -> api.writeFiware());
 					if(runProjectGenerator)
@@ -306,6 +309,57 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 			LOG.error(String.format("Error loading config: %s", configVarsPath), ex);
 			vertx.close();
 		});
+	}
+
+	/**
+	 * Description: Add Keycloak authorization resources, policies, and permissions for a data model. 
+	 * Val.Fail.enUS: Adding Keycloak authorization resources, policies, and permissions failed. 
+	 **/
+	private static Future<Void> authorizeData(Vertx vertx, JsonObject config, WebClient webClient) {
+		Promise<Void> promise = Promise.promise();
+		try {
+			SiteRequest siteRequest = new SiteRequest();
+			siteRequest.setConfig(config);
+			siteRequest.setWebClient(webClient);
+			siteRequest.initDeepSiteRequest(siteRequest);
+{% for JAVA_AUTH_API in JAVA_AUTH_APIS %}
+			{{ JAVA_AUTH_API.classeNomSimpleApiServiceImpl_enUS_stored_string }} api{{ JAVA_AUTH_API.classeNomSimple_enUS_stored_string }} = new {{ JAVA_AUTH_API.classeNomSimpleApiServiceImpl_enUS_stored_string }}();
+			api{{ JAVA_AUTH_API.classeNomSimple_enUS_stored_string }}.setVertx(vertx);
+			api{{ JAVA_AUTH_API.classeNomSimple_enUS_stored_string }}.setConfig(config);
+			api{{ JAVA_AUTH_API.classeNomSimple_enUS_stored_string }}.setWebClient(webClient);
+{% endfor %}
+			apiSiteUser.createAuthorizationScopes().onSuccess(authToken -> {
+{% for JAVA_AUTH_API in JAVA_AUTH_APIS %}
+{% if JAVA_AUTH_API.classeAuthGroupes_enUS_stored_strings is defined %}
+{% set outer_loop = loop %}
+{% for group in JAVA_AUTH_API.classeAuthGroupes_enUS_stored_strings %}
+{% if loop.index == 1 %}
+{% for n in range(outer_loop.index) %}	{% endfor %}			api{{ JAVA_AUTH_API.classeNomSimple_enUS_stored_string }}.authorizeGroupData(authToken, {{ JAVA_AUTH_API.classeNomSimple_enUS_stored_string }}.CLASS_SIMPLE_NAME, "{{ group }}", new String[] { {% for scope in (JAVA_AUTH_API['classeAuthPortees_' + group + '_enUS_stored_strings'] | default([])) %}{% if loop.index > 1 %}, {% endif %}"{{ scope }}"{% endfor %} })
+{% else %}
+{% for n in range(outer_loop.index) %}	{% endfor %}					.compose(q{{ outer_loop.index }} -> api{{ JAVA_AUTH_API.classeNomSimple_enUS_stored_string }}.authorizeGroupData(authToken, {{ JAVA_AUTH_API.classeNomSimple_enUS_stored_string }}.CLASS_SIMPLE_NAME, "{{ group }}", new String[] { {% for scope in (JAVA_AUTH_API['classeAuthPortees_' + group + '_enUS_stored_strings'] | default([])) %}{% if loop.index > 1 %}, {% endif %}"{{ scope }}"{% endfor %} }))
+{% endif %}
+{% if loop.index == (JAVA_AUTH_API.classeAuthGroupes_enUS_stored_strings | length) %}
+{% for n in range(outer_loop.index) %}	{% endfor %}					.onSuccess(q{{ outer_loop.index }} -> {
+{% endif %}
+{% endfor %}
+{% else %}
+{% if JAVA_AUTH_API.classeAuthClientPortees_enUS_stored_strings is defined %}
+{% for n in range(loop.index) %}	{% endfor %}			api{{ JAVA_AUTH_API.classeNomSimple_enUS_stored_string }}.authorizeClientData(authToken, {{ JAVA_AUTH_API.classeNomSimple_enUS_stored_string }}.CLASS_SIMPLE_NAME, config.getString(ComputateConfigKeys.AUTH_CLIENT), new String[] { {% for scope in (JAVA_AUTH_API.classeAuthClientPortees_enUS_stored_strings | default([])) %}{% if loop.index > 1 %}, {% endif %}"{{ scope }}"{% endfor %} }).onSuccess(q{{ loop.index }} -> {
+{% endif %}
+{% endif %}
+{% endfor %}
+{% for n in range(JAVA_AUTH_APIS|length) %}	{% endfor %}				LOG.info("authorize data complete");
+{% for n in range(JAVA_AUTH_APIS|length) %}	{% endfor %}				promise.complete();
+{% for JAVA_AUTH_API in JAVA_AUTH_APIS %}
+{% set outer_loop = loop %}
+{% for n in range(JAVA_AUTH_APIS|length - outer_loop.index) %}	{% endfor %}				}).onFailure(ex -> promise.fail(ex));
+{% endfor %}
+			}).onFailure(ex -> promise.fail(ex));
+		} catch(Throwable ex) {
+			LOG.error(authorizeDataFail, ex);
+			promise.fail(ex);
+		}
+		return promise.future();
 	}
 
 	/**	

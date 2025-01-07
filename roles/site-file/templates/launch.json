@@ -26,6 +26,7 @@
         , "RUN_OPENAPI3_GENERATOR": "true"
         , "RUN_PROJECT_GENERATOR": "true"
         , "RUN_SQL_GENERATOR": "true"
+        , "RUN_AUTHORIZATION_GENERATOR": "true"
 {% if ENABLE_FIWARE %}
         , "RUN_FIWARE_GENERATOR": "true"
 {% endif %}
