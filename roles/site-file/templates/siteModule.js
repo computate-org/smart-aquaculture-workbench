@@ -1,7 +1,10 @@
 Promise.all([
-  customElements.whenDefined('sl-button')
-  , customElements.whenDefined('sl-input')
+  customElements.whenDefined('{{ WEB_COMPONENTS_PREFIX }}button')
+  , customElements.whenDefined('{{ WEB_COMPONENTS_PREFIX }}input')
 ]).then(() => {
+{% if WEB_COMPONENTS_PREFIX == 'wa-' %}
+  document.body.classList.add('ready');
+{% else %}
   document.querySelector('#nav-toggle-button').addEventListener('click', event => {
     document.querySelector('#nav-toggle-button').classList.toggle('hide-mobile');
     document.querySelector('#site-aside-left').classList.toggle('hide-mobile');
@@ -10,4 +13,5 @@ Promise.all([
     document.querySelector('#nav-toggle-button').classList.toggle('hide-mobile');
     document.querySelector('#site-aside-left').classList.toggle('hide-mobile');
   });
+{% endif %}
 });
