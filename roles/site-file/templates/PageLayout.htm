@@ -106,7 +106,7 @@
    </head>
   <body>
 {% if WEB_COMPONENTS_PREFIX == 'wa-' %}
-    <{{ WEB_COMPONENTS_PREFIX }}page>
+    <{{ WEB_COMPONENTS_PREFIX }}page disable-sticky="header">
 {% else %}
     <div id="site-grid">
 {% endif %}
@@ -114,9 +114,6 @@
 \{\%- block htmBodyStartPageLayout \%\}
 {% if WEB_COMPONENTS_PREFIX == 'wa-' %}
       <aside class="main-sidebar" slot="navigation">
-        <div class="text-end">
-          <{{ WEB_COMPONENTS_PREFIX }}icon-button name="xmark" label="Close" data-drawer="close" class="hide-desktop sidebar-close-button"></{{ WEB_COMPONENTS_PREFIX }}icon-button>
-        </div>
 {% else %}
       <aside id="site-aside-left" class="hide-mobile margin-block-end-1rem ">
         <{{ WEB_COMPONENTS_PREFIX }}button id="site-aside-left-close-button" label="Close" data-drawer="close" class="hide-desktop">
@@ -143,19 +140,17 @@
               </div>
               <div>\{\{ userFullName \}\}</div>
               <div>\{\{ userEmail \}\}</div>
-              <div>
-                <{{ WEB_COMPONENTS_PREFIX }}tooltip content="see or change your user profile">
-                  <{{ WEB_COMPONENTS_PREFIX }}button{% if WEB_COMPONENTS_PREFIX == 'wa-' %} variant="brand"{% else %}{% endif %} href="/user" label="see or change your user profile">
-                    <i slot="prefix" class="{{ FONTAWESOME_STYLE }} fa-house-user"></i>
-                    <span>my user page</span>
-                  </{{ WEB_COMPONENTS_PREFIX }}button>
-                </{{ WEB_COMPONENTS_PREFIX }}tooltip>
-                <{{ WEB_COMPONENTS_PREFIX }}tooltip placement="right" content="sign out">
-                  <{{ WEB_COMPONENTS_PREFIX }}button{% if WEB_COMPONENTS_PREFIX == 'wa-' %} variant="brand"{% else %}{% endif %} href="\{\{ logoutUrl \}\}" label="sign out">
-                    <i slot="prefix" class="{{ FONTAWESOME_STYLE }} fa-person-from-portal"></i>
-                    <span>sign out</span>
-                  </{{ WEB_COMPONENTS_PREFIX }}button>
-                </{{ WEB_COMPONENTS_PREFIX }}tooltip>
+              <{{ WEB_COMPONENTS_PREFIX }}tooltip for="site-button-user-page">see or change your user profile</{{ WEB_COMPONENTS_PREFIX }}tooltip>
+              <{{ WEB_COMPONENTS_PREFIX }}tooltip for="site-button-logout" placement="right">sign out</{{ WEB_COMPONENTS_PREFIX }}tooltip>
+              <div class="flex flex-column round-row primary-smart-border-radius margin-block">
+                <{{ WEB_COMPONENTS_PREFIX }}button id="site-button-user-page"{% if WEB_COMPONENTS_PREFIX == 'wa-' %} variant="brand"{% else %}{% endif %} href="\{\{ SITE_BASE_URL \}\}/en-us/edit/user/\{\{ userId \}\}" label="see or change your user profile">
+                  <i slot="prefix" class="{{ FONTAWESOME_STYLE }} fa-house-user"></i>
+                  <span>my user page</span>
+                </{{ WEB_COMPONENTS_PREFIX }}button>
+                <{{ WEB_COMPONENTS_PREFIX }}button id="site-button-logout"{% if WEB_COMPONENTS_PREFIX == 'wa-' %} variant="brand"{% else %}{% endif %} href="\{\{ logoutUrl \}\}" label="sign out">
+                  <i slot="prefix" class="{{ FONTAWESOME_STYLE }} fa-person-from-portal"></i>
+                  <span>sign out</span>
+                </{{ WEB_COMPONENTS_PREFIX }}button>
               </div>
             </{{ WEB_COMPONENTS_PREFIX }}details>
 \{\%- else \%\}
@@ -188,7 +183,7 @@
         </nav>
       </aside>
       <main>
-        <header class="margin-block flex gap-m align-items-center">
+        <header{% if WEB_COMPONENTS_PREFIX == 'wa-' %} slot="header" class="margin-block "{% else %} class="margin-block flex gap-m align-items-center"{% endif %}>
           <{{ WEB_COMPONENTS_PREFIX }}icon-button data-toggle-nav name="bars" class="nav-toggle-button hide-desktop " label="open menu" appearance="text"></{{ WEB_COMPONENTS_PREFIX }}icon-button>
           <{{ WEB_COMPONENTS_PREFIX }}input placeholder="search" id="siteSearchInput">
             <i slot="prefix" class="{{ FONTAWESOME_STYLE }} fa-magnifying-glass"></i>
@@ -206,19 +201,25 @@
 \{\%- endblock htmBodyMiddlePageLayout \%\}
 \{\%- block htmBodyEndPageLayout \%\}
       </main>
-      <footer class="flex flex-column round-row primary-smart-border-radius">
+      <footer class="flex flex-column round-row primary-smart-border-radius margin-block">
         \{\% if GITHUB_ORG is defined \%\}
-        <{{ WEB_COMPONENTS_PREFIX }}button{% if WEB_COMPONENTS_PREFIX == 'wa-' %} variant="brand"{% else %}{% endif %} size="large" href="https://github.com/\{\{ GITHUB_ORG \}\}/\{\{ SITE_NAME \}\}/" target="_blank">
-          This site is <b><i class="fa-brands fa-github fa-xl"></i> open source</b>.
-        </{{ WEB_COMPONENTS_PREFIX }}button>
+        <a href="https://github.com/\{\{ GITHUB_ORG \}\}/\{\{ SITE_NAME \}\}/" target="_blank">
+          <{{ WEB_COMPONENTS_PREFIX }}card>
+            This site is <b><i class="fa-brands fa-github fa-xl"></i> open source</b>
+          </{{ WEB_COMPONENTS_PREFIX }}card>
+        </a>
         \{\% endif \%\}
-        <{{ WEB_COMPONENTS_PREFIX }}button{% if WEB_COMPONENTS_PREFIX == 'wa-' %} variant="brand"{% else %}{% endif %} size="large" id="footer-generated-by" href="https://www.computate.org/" target="_blank">
-            Generated with <b><img class="footer-img" src="\{\{ STATIC_BASE_URL \}\}/svg/computate-keys.svg" alt="Computate"/></b>.
-        </{{ WEB_COMPONENTS_PREFIX }}button>
+        <a href="https://www.computate.org/" target="_blank" id="footer-generated-by">
+          <{{ WEB_COMPONENTS_PREFIX }}card>
+              Generated with <b><img class="footer-img" src="\{\{ STATIC_BASE_URL \}\}/svg/computate-keys.svg" alt="Computate"/></b>
+          </{{ WEB_COMPONENTS_PREFIX }}card>
+        </a>
         \{\% if SITE_POWERED_BY_URL is defined \%\}
-        <{{ WEB_COMPONENTS_PREFIX }}button{% if WEB_COMPONENTS_PREFIX == 'wa-' %} variant="brand"{% else %}{% endif %} size="large" id="footer-powered-by" href="\{\{ SITE_POWERED_BY_URL \}\}" target="_blank">
-          Powered by <i class="fa-brands fa-redhat fa-xl" style="color: #ff0000;"></i> <b>\{\{ SITE_POWERED_BY_NAME | e \}\}</b>
-        </{{ WEB_COMPONENTS_PREFIX }}button>
+        <a href="\{\{ SITE_POWERED_BY_URL \}\}" target="_blank" id="footer-powered-by">
+          <{{ WEB_COMPONENTS_PREFIX }}card>
+            Powered by <i class="fa-brands fa-redhat fa-xl" style="color: #ff0000;"></i> <b>\{\{ SITE_POWERED_BY_NAME | e \}\}</b>
+          </{{ WEB_COMPONENTS_PREFIX }}card>
+        </a>
         \{\% endif \%\}
       </footer>
 {% if WEB_COMPONENTS_PREFIX == 'wa-' %}

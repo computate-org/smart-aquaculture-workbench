@@ -184,11 +184,9 @@ public class BaseModel extends BaseModelGen<Object> implements ComputateBaseMode
 	 * {@inheritDoc}
 	 * DocValues: true
 	 * Persist: true
-	 * HtmRow: 99
-	 * HtmCell: 2
 	 * Facet: true
-	 * DisplayName: product page
-	 * Description: Visit this product's landing page. 
+	 * DisplayName: display page
+	 * Description: Visit this landing page. 
 	 * Link: true
 	 * VarUrlDisplayPage: true
 	 */
