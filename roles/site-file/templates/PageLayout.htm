@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="\{\{ SITE_LOCALE \}\}" class="{{ WEB_COMPONENTS_PREFIX }}theme-{% if WEB_COMPONENTS_PREFIX == 'wa-' %}default-{% endif %}\{\{ SITE_THEME \}\}">
+<html lang="\{\{ SITE_LOCALE \}\}" class="{{ WEB_COMPONENTS_PREFIX }}{% if WEB_COMPONENTS_PREFIX == 'wa-' %}{% else %}theme-{% endif %}\{\{ SITE_THEME \}\}">
   <head>
 \{\%- block htmHeadPageLayout \%\}
     <meta charset="UTF-8" />
@@ -154,7 +154,7 @@
               </div>
             </{{ WEB_COMPONENTS_PREFIX }}details>
 \{\%- else \%\}
-            <{{ WEB_COMPONENTS_PREFIX }}button{% if WEB_COMPONENTS_PREFIX == 'wa-' %} variant="brand"{% else %}{% endif %} href="\{\{ SITE_BASE_URL \}\}/user">
+            <{{ WEB_COMPONENTS_PREFIX }}button{% if WEB_COMPONENTS_PREFIX == 'wa-' %} variant="brand"{% else %}{% endif %} href="\{\{ SITE_BASE_URL \}\}/en-us/search/user">
               <i class="{{ FONTAWESOME_STYLE }} fa-person-to-portal"></i> login
             </{{ WEB_COMPONENTS_PREFIX }}button>
 \{\%- endif \%\}
