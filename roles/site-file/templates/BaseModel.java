@@ -155,7 +155,7 @@ public class BaseModel extends BaseModelGen<Object> implements ComputateBaseMode
 	/**
 	 * Description: A helper method for generating a URL friendly unique ID for this object
 	 */
-	public String toId(String s) {
+	public static String toId(String s) {
 		if(s != null) {
 			s = Normalizer.normalize(s, Normalizer.Form.NFD);
 			s = StringUtils.lowerCase(s);
@@ -192,8 +192,14 @@ public class BaseModel extends BaseModelGen<Object> implements ComputateBaseMode
 	 */
 	protected void _displayPage(Wrap<String> w) {
 		String f = classStringFormatUrlDisplayPageForClass();
-		if(f != null)
+		if(f != null) {
 			w.o(String.format(f, siteRequest_.getConfig().getString(ComputateConfigKeys.SITE_BASE_URL), idForClass()));
+		} else {
+			f = classStringFormatUrlEditPageForClass();
+			if(f != null) {
+				w.o(String.format(f, siteRequest_.getConfig().getString(ComputateConfigKeys.SITE_BASE_URL), idForClass()));
+			}
+		}
 	}
 
 	/**
@@ -204,7 +210,7 @@ public class BaseModel extends BaseModelGen<Object> implements ComputateBaseMode
 	 * DisplayName: edit
 	 * Description: Edit this
 	 * Link: true
-	 * Icon: <i class="fa-solid fa-pen-to-square"></i>
+	 * Icon: <i class="fa-duotone fa-regular fa-pen-to-square"></i>
 	 * VarUrlEditPage: true
 	 */
 	protected void _editPage(Wrap<String> w) {

@@ -1804,6 +1804,10 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 {% endfor %}
 {% endif %}
 
+			SiteUserEnUSApiServiceImpl apiSiteUser = new SiteUserEnUSApiServiceImpl();
+			initializeApiService(apiSiteUser);
+			SiteRoutes.routes(router, oauth2AuthHandler, config(), webClient, apiSiteUser);
+
 			LOG.info("The UI was configured properly.");
 			promise.complete();
 		} catch(Exception ex) {
