@@ -170,7 +170,7 @@ public class WorkerVerticle extends WorkerVerticleGen<AbstractVerticle> {
 	 **/
 	@Override()
 	public void start(Promise<Void> startPromise) throws Exception, Exception {
-		commitWithin = config().getInteger(ConfigKeys.SOLR_WORKER_COMMIT_WITHIN_MILLIS);
+		commitWithin = Integer.parseInt(config().getString(ConfigKeys.SOLR_WORKER_COMMIT_WITHIN_MILLIS));
 
 		try {
 			configureI18n().onSuccess(a -> 
@@ -268,7 +268,7 @@ public class WorkerVerticle extends WorkerVerticleGen<AbstractVerticle> {
 		Promise<Void> promise = Promise.promise();
 
 		try {
-			Boolean sslVerify = config().getBoolean(ConfigKeys.SSL_VERIFY);
+			Boolean sslVerify = Boolean.valueOf(config().getString(ConfigKeys.SSL_VERIFY));
 			webClient = WebClient.create(vertx, new WebClientOptions().setVerifyHost(sslVerify).setTrustAll(!sslVerify));
 			promise.complete();
 		} catch(Exception ex) {
@@ -285,7 +285,7 @@ public class WorkerVerticle extends WorkerVerticleGen<AbstractVerticle> {
 	 * Val.ConnectionSuccess.enUS: The database client connection was successful. 
 	 * 
 	 * Val.InitError.enUS: Could not initialize the database tables. 
-	 * Val.InitSuccess.enUS: The database tables were created successfully. 
+	 * Val.InitSuccess.enUS: The database was initialized successfully. 
 	 * 
 	 *	Configure shared database connections across the cluster for massive scaling of the application. 
 	 *	Return a promise that configures a shared database client connection. 
@@ -296,20 +296,20 @@ public class WorkerVerticle extends WorkerVerticleGen<AbstractVerticle> {
 		Promise<Void> promise = Promise.promise();
 		try {
 			PgConnectOptions pgOptions = new PgConnectOptions();
-			Integer jdbcMaxPoolSize = config().getInteger(ConfigKeys.DATABASE_MAX_POOL_SIZE, 1);
+			Integer jdbcMaxPoolSize = Integer.parseInt(config().getString(ConfigKeys.DATABASE_MAX_POOL_SIZE));
 
-			pgOptions.setPort(config().getInteger(ConfigKeys.DATABASE_PORT));
+			pgOptions.setPort(Integer.parseInt(config().getString(ConfigKeys.DATABASE_PORT)));
 			pgOptions.setHost(config().getString(ConfigKeys.DATABASE_HOST));
 			pgOptions.setDatabase(config().getString(ConfigKeys.DATABASE_DATABASE));
 			pgOptions.setUser(config().getString(ConfigKeys.DATABASE_USERNAME));
 			pgOptions.setPassword(config().getString(ConfigKeys.DATABASE_PASSWORD));
-			pgOptions.setIdleTimeout(config().getInteger(ConfigKeys.DATABASE_MAX_IDLE_TIME, 24));
+			pgOptions.setIdleTimeout(Integer.parseInt(config().getString(ConfigKeys.DATABASE_MAX_IDLE_TIME)));
 			pgOptions.setIdleTimeoutUnit(TimeUnit.HOURS);
-			pgOptions.setConnectTimeout(config().getInteger(ConfigKeys.DATABASE_CONNECT_TIMEOUT, 5000));
+			pgOptions.setConnectTimeout(Integer.parseInt(config().getString(ConfigKeys.DATABASE_CONNECT_TIMEOUT)));
 
 			PoolOptions poolOptions = new PoolOptions();
 			poolOptions.setMaxSize(jdbcMaxPoolSize);
-			poolOptions.setMaxWaitQueueSize(config().getInteger(ConfigKeys.DATABASE_MAX_WAIT_QUEUE_SIZE, 10));
+			poolOptions.setMaxWaitQueueSize(Integer.parseInt(config().getString(ConfigKeys.DATABASE_MAX_WAIT_QUEUE_SIZE)));
 
 			pgPool = PgBuilder.pool().connectingTo(pgOptions).with(poolOptions).using(vertx).build();
 
@@ -353,7 +353,7 @@ public class WorkerVerticle extends WorkerVerticleGen<AbstractVerticle> {
 		Promise<KafkaProducer<String, String>> promise = Promise.promise();
 
 		try {
-			if(config().getBoolean(ConfigKeys.ENABLE_KAFKA)) {
+			if(Boolean.valueOf(config().getString(ConfigKeys.ENABLE_KAFKA))) {
 				Map<String, String> kafkaConfig = new HashMap<>();
 				kafkaConfig.put("bootstrap.servers", config().getString(ConfigKeys.KAFKA_BROKERS));
 				kafkaConfig.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
@@ -388,10 +388,10 @@ public class WorkerVerticle extends WorkerVerticleGen<AbstractVerticle> {
 		Promise<MqttClient> promise = Promise.promise();
 
 		try {
-			if(BooleanUtils.isTrue(config().getBoolean(ConfigKeys.ENABLE_MQTT))) {
+			if(BooleanUtils.isTrue(Boolean.valueOf(config().getString(ConfigKeys.ENABLE_MQTT)))) {
 				try {
 					mqttClient = MqttClient.create(vertx);
-					mqttClient.connect(config().getInteger(ConfigKeys.MQTT_PORT), config().getString(ConfigKeys.MQTT_HOST)).onSuccess(a -> {
+					mqttClient.connect(Integer.parseInt(config().getString(ConfigKeys.MQTT_PORT)), config().getString(ConfigKeys.MQTT_HOST)).onSuccess(a -> {
 						try {
 							LOG.info("The MQTT client was initialized successfully.");
 							promise.complete(mqttClient);
@@ -424,11 +424,11 @@ public class WorkerVerticle extends WorkerVerticleGen<AbstractVerticle> {
 		Promise<AmqpClient> promise = Promise.promise();
 
 		try {
-			if(BooleanUtils.isTrue(config().getBoolean(ConfigKeys.ENABLE_AMQP))) {
+			if(BooleanUtils.isTrue(Boolean.valueOf(config().getString(ConfigKeys.ENABLE_AMQP)))) {
 				try {
 					AmqpClientOptions options = new AmqpClientOptions()
 							.setHost(config().getString(ConfigKeys.AMQP_HOST))
-							.setPort(config().getInteger(ConfigKeys.AMQP_PORT))
+							.setPort(Integer.parseInt(config().getString(ConfigKeys.AMQP_PORT)))
 							.setUsername(config().getString(ConfigKeys.AMQP_USER))
 							.setPassword(config().getString(ConfigKeys.AMQP_PASSWORD))
 							.setVirtualHost(config().getString(ConfigKeys.AMQP_VIRTUAL_HOST))
@@ -476,11 +476,11 @@ public class WorkerVerticle extends WorkerVerticleGen<AbstractVerticle> {
 		Promise<RabbitMQClient> promise = Promise.promise();
 
 		try {
-			if(BooleanUtils.isTrue(config().getBoolean(ConfigKeys.ENABLE_RABBITMQ))) {
+			if(BooleanUtils.isTrue(Boolean.valueOf(config().getString(ConfigKeys.ENABLE_RABBITMQ)))) {
 				try {
 					RabbitMQOptions options = new RabbitMQOptions()
 							.setHost(config().getString(ConfigKeys.RABBITMQ_HOST_NAME))
-							.setPort(config().getInteger(ConfigKeys.RABBITMQ_PORT))
+							.setPort(Integer.parseInt(config().getString(ConfigKeys.RABBITMQ_PORT)))
 							.setUser(config().getString(ConfigKeys.RABBITMQ_USER))
 							.setPassword(config().getString(ConfigKeys.RABBITMQ_PASSWORD))
 							.setVirtualHost(config().getString(ConfigKeys.RABBITMQ_VIRTUAL_HOST))
@@ -531,7 +531,7 @@ public class WorkerVerticle extends WorkerVerticleGen<AbstractVerticle> {
 	 **/
 	private Future<Void> importData() {
 		Promise<Void> promise = Promise.promise();
-		if(config().getBoolean(ConfigKeys.ENABLE_IMPORT_DATA)) {
+		if(Boolean.valueOf(config().getString(ConfigKeys.ENABLE_IMPORT_DATA))) {
 			SiteRequest siteRequest = new SiteRequest();
 			siteRequest.setConfig(config());
 			siteRequest.setWebClient(webClient);

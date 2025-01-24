@@ -110,21 +110,6 @@ main, footer {
 
 /* theme css */
 {% if WEB_COMPONENTS_PREFIX == 'wa-' %}
-:root,
-:host,
-.wa-theme-default-{{ SITE_THEME }} {
-  --wa-color-brand-fill-quiet: var(--wa-color-violet-10);
-  --wa-color-brand-fill-normal: var(--wa-color-violet-90);
-  --wa-color-brand-fill-loud: var(--wa-color-violet-50);
-  --wa-color-brand-border-quiet: var(--wa-color-violet-90);
-  --wa-color-brand-border-normal: var(--wa-color-violet-80);
-  --wa-color-brand-border-loud: var(--wa-color-violet-60);
-  --wa-color-brand-on-quiet: var(--wa-color-violet-40);
-  --wa-color-brand-on-normal: var(--wa-color-violet-30);
-  --wa-color-brand-on-loud: white;
-
-  --wa-color-focus: var(--wa-color-violet-60);
-}
 {% else %}
 :root {
   /* Changes the primary theme color to purple using primitives */
@@ -261,30 +246,15 @@ main, footer {
     /* General Elements */
     /********************/
 
-    a {
-      &:not(:has(img, wa-card, wa-callout), #site-results-grid a) {
-        outline-offset: calc(0 - var(--wa-space-l));
-        &:hover {
-          transition: outline-offset var(--wa-transition-slow), outline var(--wa-transition-slow);
-          outline: var(--wa-border-style) var(--wa-border-width-m);
-          outline-offset: var(--wa-space-s);
-        }
-      }
-      text-decoration: none;
-      &:hover {
-        text-decoration: underline;
+    #grid {
+      display: grid;
+      gap: 1rem;
+      > * {
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-column: span 3;
       }
     }
-
-      #grid {
-        display: grid;
-        gap: 1rem;
-        > * {
-          display: grid;
-          grid-template-columns: subgrid;
-          grid-column: span 3;
-        }
-      }
 
     img {
       vertical-align: middle;
@@ -500,11 +470,14 @@ main, footer {
     .font-weight-heading {font-weight: var(--wa-font-weight-heading);}
   }
 }
-
-
-
-
-
+:where(:root), :host, .wa-theme-glossy {
+  & wa-input {
+    --wa-theme-glossy-upper-tint: inset 0 -0.50em 0 0 rgb(255 255 255 / 0.085);
+    --wa-theme-glossy-lower-shade: inset 0 1.125em 0 0 rgb(0 0 0 / 0.02);
+    --box-shadow: var(--wa-theme-glossy-upper-tint), var(--wa-theme-glossy-lower-shade);
+    transition: all var(--wa-transition-fast);
+  }
+}
 
 {% else %}
 
