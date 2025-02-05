@@ -18,6 +18,9 @@ footer > a > wa-card {
   width: 100%;
   text-align: center;
 }
+wa-dropdown {
+  z-index: 1;
+}
 /* @media stuff */
 @media (max-width: 767px) {
   /* Mobile mode */
