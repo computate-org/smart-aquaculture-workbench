@@ -138,6 +138,7 @@ import io.vertx.ext.auth.User;
 import io.vertx.ext.auth.authorization.AuthorizationProvider;
 import io.vertx.ext.auth.oauth2.OAuth2Auth;
 import io.vertx.ext.auth.oauth2.OAuth2Options;
+import io.vertx.ext.auth.oauth2.Oauth2Credentials;
 import io.vertx.ext.auth.oauth2.authorization.KeycloakAuthorization;
 import io.vertx.ext.auth.oauth2.impl.OAuth2AuthProviderImpl;
 import io.vertx.ext.auth.oauth2.providers.OpenIDConnectAuth;
@@ -1146,7 +1147,7 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 						config.put("redirectUri", siteBaseUrl + authCallbackUri);
 						OAuth2Auth authProvider = authProviders.get(authClientOpenApiId);
 
-						authProvider.authenticate(config, res -> {
+						authProvider.authenticate(new Oauth2Credentials(config), res -> {
 							if (res.failed()) {
 								LOG.error("Failed to authenticate user. ", res.cause());
 								ctx.fail(res.cause());
@@ -1159,7 +1160,7 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 									Cookie cookie = Cookie.cookie("sessionIdBefore", session.id());
 									if(StringUtils.startsWith(siteBaseUrl, "https://"))
 										cookie.setSecure(true);
-									ctx.addCookie(cookie);
+									ctx.response().addCookie(cookie);
 									session.regenerateId();
 									String redirectUri = session.get("redirect_uri");
 									// we should redirect the UA so this link becomes invalid
@@ -1454,7 +1455,7 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 			});
 {% if SQUARE_ACCESS_TOKEN is defined %}
 
-			if(Boolean.valueOf(config().getString(ConfigKeys.ENABLE_SQUARE, false))) {
+			if(Boolean.valueOf(config().getString(ConfigKeys.ENABLE_SQUARE))) {
 				router.post("/square/order").handler(BodyHandler.create()).handler(handler -> {
 					try {
 						String signature = handler.request().headers().get("x-square-hmacsha256-signature");
@@ -1801,6 +1802,11 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 				ctx.response().setStatusCode(302);
 				ctx.end();
 			});
+{% endfor %}
+{% endif %}
+{% if SITE_ROUTES is defined %}
+{% for route in SITE_REDIRECTS %}
+{{ route }}
 {% endfor %}
 {% endif %}
 
