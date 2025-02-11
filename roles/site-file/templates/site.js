@@ -38,7 +38,7 @@ function fqChange(classSimpleName, elem) {
 	if(elem.value)
 		document.querySelector("#pageSearchVal-" + elem.getAttribute("id")).innerText = "fq=" + elem.getAttribute('data-var') + ":" + encodeURIComponent(elem.value);
 	else
-		document.querySelector("#pageSearchVal-" + $(elem).getAttribute("id")).innerText = "";
+		document.querySelector("#pageSearchVal-" + elem.getAttribute("id")).innerText = "";
 	searchPage(classSimpleName);
 }
 
