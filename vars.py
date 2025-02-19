@@ -24,8 +24,8 @@ def dirname(path):
 def realpath(path):
     return os.path.realpath(path)
 
-def b64decode(s):
-    return base64.b64decode(s).decode("utf-8")
+def b64decode(str):
+    return base64.b64decode(str).decode("utf-8")
 
 def to_bool(s):
     if s == None:
@@ -80,13 +80,21 @@ def quoted_presenter(dumper, data):
     return dumper.represent_scalar('tag:yaml.org,2002:str', data, style="'")
 
 if __name__ == '__main__':
-    kubernetes.config.load_incluster_config()
+    if os.path.exists('/var/run/secrets/kubernetes.io/serviceaccount/namespace'):
+        kubernetes.config.load_incluster_config()
+    else:
+        kubernetes.config.load_kube_config()
     k8s_client = kubernetes.client.ApiClient()
     openshift_client = DynamicClient(k8s_client)
 
     parser = argparse.ArgumentParser(description='Parse vars.yaml file for a computate project')
     parser.add_argument('path', nargs='?', default='vars.yaml', help='the path to the vars.yaml file for the project to generate')
     args = parser.parse_args()
+
+    filters = {
+        "basename": basename
+        , "dirname": dirname
+    }
 
     config = {}
     vars_path = pathlib.Path(args.path).resolve()
