@@ -25,4 +25,4 @@ RUN rm -rf /home/default/computate-base /home/default/computate-search /home/def
 WORKDIR /home/default/{{ SITE_NAME }}
 RUN mvn clean install -DskipTests
 RUN mvn dependency:build-classpath -Dmdep.outputFile=/home/default/{{ SITE_NAME }}/cp.txt -q
-CMD java -cp "$(cat /home/default/{{ SITE_NAME }}/cp.txt):/home/default/{{ SITE_NAME }}/classes" {{ JAVA_MAIN_CLASS }}
+CMD java -cp "$(cat /home/default/{{ SITE_NAME }}/cp.txt):/home/default/{{ SITE_NAME }}/target/classes" {{ JAVA_MAIN_CLASS }}
