@@ -155,8 +155,6 @@ public class BaseResult extends BaseResultGen<Object> implements ComputateBaseRe
 	 * HtmRow: 99
 	 * HtmCell: 2
 	 * Facet: true
-	 * DisplayName: product page
-	 * Description: Visit this product's landing page. 
 	 * Link: true
 	 * VarUrlDisplayPage: true
 	 */

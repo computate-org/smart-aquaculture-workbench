@@ -1394,18 +1394,13 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 			initializeApiService(api{{ JAVA_MODEL.classeNomSimple_enUS_stored_string }});
 			registerApiService({{ JAVA_MODEL.classeNomSimpleGenApiService_enUS_stored_string }}.class, api{{ JAVA_MODEL.classeNomSimple_enUS_stored_string }}, {{ JAVA_MODEL.classeNomSimple_enUS_stored_string }}.getClassApiAddress());
 {% if JAVA_MODEL.classeUriPageAffichage_enUS_stored_string is defined %}
-			// api{{ JAVA_MODEL.classeNomSimple_enUS_stored_string }}.configureUi{% if JAVA_MODEL.classeModele_stored_boolean %}Model{% else %}Result{% endif %}(router, {{ JAVA_MODEL.classeNomSimple_enUS_stored_string }}.class, SiteRequest.class, "{{ JAVA_MODEL.classeUriPageAffichage_enUS_stored_string }}");
 {% if JAVA_MODEL.classeUriPageUtilisateur_enUS_stored_string is defined %}
-			// api{{ JAVA_MODEL.classeNomSimple_enUS_stored_string }}.configureUserUi{% if JAVA_MODEL.classeModele_stored_boolean %}Model{% else %}Result{% endif %}(router, {{ JAVA_MODEL.classeNomSimple_enUS_stored_string }}.class, SiteRequest.class, SiteUser.class, SiteUser.CLASS_API_ADDRESS_SiteUser, "{{ JAVA_MODEL.classeUriPageAffichage_enUS_stored_string }}", "{{ JAVA_MODEL.classeUriPageUtilisateur_enUS_stored_string }}");
 {% endif %}
 {% else %}
 {% if JAVA_MODEL.classeUriPageUtilisateur_enUS_stored_string is defined %}
-			// api{{ JAVA_MODEL.classeNomSimple_enUS_stored_string }}.configureUserUi{% if JAVA_MODEL.classeModele_stored_boolean %}Model{% else %}Result{% endif %}(router, {{ JAVA_MODEL.classeNomSimple_enUS_stored_string }}.class, SiteRequest.class, SiteUser.class, SiteUser.CLASS_API_ADDRESS_SiteUser, null, "{{ JAVA_MODEL.classeUriPageUtilisateur_enUS_stored_string }}");
 {% endif %}
 {% endif %}
 {% else %}
-// 
-			// {{ JAVA_MODEL.classeNomSimpleGenApiService_enUS_stored_string }}.registerService(vertx, config(), workerExecutor, oauth2AuthHandler, pgPool, kafkaProducer, mqttClient, amqpSender, rabbitmqClient, webClient, oauth2AuthenticationProvider, authorizationProvider, jinjava);
 {% endfor %}
 
 			Future.all(futures).onSuccess( a -> {
