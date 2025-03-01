@@ -19,6 +19,89 @@ footer > a > {{ WEB_COMPONENTS_PREFIX }}card {
   justify-content: center;
   align-items: center;
 }
+
+:where(:root),
+:host,
+:where([class^='wa-theme-'], [class*=' wa-theme-']),
+.wa-palette-default {
+
+  --wa-color-pink-95: #feeff9;
+  --wa-color-pink-90: #feddf0;
+  --wa-color-pink-80: #fcb5d8;
+  --wa-color-pink-70: #f78dbf;
+  --wa-color-pink-60: #e66ba3;
+  --wa-color-pink-50: #c84382;
+  --wa-color-pink-40: #9e2a6c;
+  --wa-color-pink-30: #7d1e58;
+  --wa-color-pink-20: #5e1342;
+  --wa-color-pink-10: #3c0828;
+  --wa-color-pink-05: #28041a;
+  --wa-color-pink: var(--wa-color-pink-50);
+
+  --wa-color-purple-95: #f7f0ff;
+  --wa-color-purple-90: #eedfff;
+  --wa-color-purple-80: #ddbdff;
+  --wa-color-purple-70: #ca99ff;
+  --wa-color-purple-60: #b678f5;
+  --wa-color-purple-50: #9951db;
+  --wa-color-purple-40: #7936b3;
+  --wa-color-purple-30: #612692;
+  --wa-color-purple-20: #491870;
+  --wa-color-purple-10: #2d0b48;
+  --wa-color-purple-05: #1e0532;
+  --wa-color-purple: var(--wa-color-purple-50);
+}
+
+wa-card.pink-purple-background {
+  background: linear-gradient(130deg, var(--wa-color-pink-50), var(--wa-color-purple-40));
+  color: white;
+  &:is(wa-button, wa-dialog)::part(base) {
+    border: solid 1px var(--wa-color-pink-30);
+  }
+}
+.pink-purple-background-headers {
+  wa-card::part(header) {
+    background: linear-gradient(130deg, var(--wa-color-pink-50), var(--wa-color-purple-40));
+    color: white;
+    &:is(wa-button, wa-dialog)::part(base) {
+      border: solid 1px var(--wa-color-pink-30);
+    }
+  }
+}
+
+wa-card.red-pink-background {
+  background: linear-gradient(130deg, var(--wa-color-red-40), var(--wa-color-pink-50));
+  color: white;
+  &:is(wa-button, wa-dialog)::part(base) {
+    border: solid 1px var(--wa-color-red-30);
+  }
+}
+.red-pink-background-headers {
+  wa-card::part(header) {
+    background: linear-gradient(130deg, var(--wa-color-red-40), var(--wa-color-pink-50));
+    color: white;
+    &:is(wa-button, wa-dialog)::part(base) {
+      border: solid 1px var(--wa-color-red-30);
+    }
+  }
+}
+
+wa-card.purple-blue-background {
+  background: linear-gradient(130deg, var(--wa-color-purple-40), var(--wa-color-blue-50));
+  color: white;
+  &:is(wa-button, wa-dialog)::part(base) {
+    border: solid 1px var(--wa-color-purple-30);
+  }
+}
+.purple-blue-background-headers {
+  wa-card::part(header) {
+    background: linear-gradient(130deg, var(--wa-color-purple-40), var(--wa-color-blue-50));
+    color: white;
+    &:is(wa-button, wa-dialog)::part(base) {
+      border: solid 1px var(--wa-color-purple-30);
+    }
+  }
+}
 /* @media stuff */
 @media (max-width: 767px) {
   /* Mobile mode */
@@ -982,134 +1065,6 @@ html, body {
 /***********/
 /* article */
 /***********/
-.pink-purple-background {
-  &:not({{ WEB_COMPONENTS_PREFIX }}button), &:is({{ WEB_COMPONENTS_PREFIX }}button, {{ WEB_COMPONENTS_PREFIX }}details)::part(base) {
-    background: linear-gradient(130deg, var(--{{ WEB_COMPONENTS_PREFIX }}color-pink-300), var(--{{ WEB_COMPONENTS_PREFIX }}color-purple-300));
-    color: white;
-    &:is({{ WEB_COMPONENTS_PREFIX }}button, {{ WEB_COMPONENTS_PREFIX }}dialog)::part(base) {
-      border: solid 1px var(--{{ WEB_COMPONENTS_PREFIX }}color-pink-300);
-    }
-  }
-}
-.blue-teal-background {
-  &:not({{ WEB_COMPONENTS_PREFIX }}button), &:is({{ WEB_COMPONENTS_PREFIX }}button, {{ WEB_COMPONENTS_PREFIX }}details)::part(base) {
-    background: linear-gradient(130deg, var(--{{ WEB_COMPONENTS_PREFIX }}color-blue-300), var(--{{ WEB_COMPONENTS_PREFIX }}color-teal-300));
-    color: white;
-    &:is({{ WEB_COMPONENTS_PREFIX }}button, {{ WEB_COMPONENTS_PREFIX }}dialog)::part(base) {
-      border: solid 1px var(--{{ WEB_COMPONENTS_PREFIX }}color-blue-300);
-    }
-  }
-}
-.red-pink-background {
-  &:not({{ WEB_COMPONENTS_PREFIX }}button), &:is({{ WEB_COMPONENTS_PREFIX }}button, {{ WEB_COMPONENTS_PREFIX }}details)::part(base) {
-    background: linear-gradient(130deg, var(--{{ WEB_COMPONENTS_PREFIX }}color-red-300), var(--{{ WEB_COMPONENTS_PREFIX }}color-pink-300));
-    color: white;
-    &:is({{ WEB_COMPONENTS_PREFIX }}button, {{ WEB_COMPONENTS_PREFIX }}dialog)::part(base) {
-      border: solid 1px var(--{{ WEB_COMPONENTS_PREFIX }}color-red-300);
-    }
-  }
-}
-.blue-purple-background {
-  &:not({{ WEB_COMPONENTS_PREFIX }}button), &:is({{ WEB_COMPONENTS_PREFIX }}button, {{ WEB_COMPONENTS_PREFIX }}details)::part(base) {
-    background: linear-gradient(130deg, var(--{{ WEB_COMPONENTS_PREFIX }}color-blue-300), var(--{{ WEB_COMPONENTS_PREFIX }}color-purple-300));
-    color: white;
-    &:is({{ WEB_COMPONENTS_PREFIX }}button, {{ WEB_COMPONENTS_PREFIX }}dialog)::part(base) {
-      border: solid 1px var(--{{ WEB_COMPONENTS_PREFIX }}color-blue-300);
-    }
-  }
-}
-.purple-red-background {
-  &:not({{ WEB_COMPONENTS_PREFIX }}button), &:is({{ WEB_COMPONENTS_PREFIX }}button, {{ WEB_COMPONENTS_PREFIX }}details)::part(base) {
-    background: linear-gradient(130deg, var(--{{ WEB_COMPONENTS_PREFIX }}color-purple-300), var(--{{ WEB_COMPONENTS_PREFIX }}color-red-300));
-    color: white;
-    &:is({{ WEB_COMPONENTS_PREFIX }}button, {{ WEB_COMPONENTS_PREFIX }}dialog)::part(base) {
-      border: solid 1px var(--{{ WEB_COMPONENTS_PREFIX }}color-purple-300);
-    }
-  }
-}
-.orange-blue-background {
-  &:not({{ WEB_COMPONENTS_PREFIX }}button), &:is({{ WEB_COMPONENTS_PREFIX }}button, {{ WEB_COMPONENTS_PREFIX }}details)::part(base) {
-    background: linear-gradient(130deg, var(--{{ WEB_COMPONENTS_PREFIX }}color-orange-300), var(--{{ WEB_COMPONENTS_PREFIX }}color-blue-300));
-    color: white;
-    &:is({{ WEB_COMPONENTS_PREFIX }}button, {{ WEB_COMPONENTS_PREFIX }}dialog)::part(base) {
-      border: solid 1px var(--{{ WEB_COMPONENTS_PREFIX }}color-orange-300);
-    }
-  }
-}
-.gradient-button {
-  &:not({{ WEB_COMPONENTS_PREFIX }}button), &:is({{ WEB_COMPONENTS_PREFIX }}button)::part(base) {
-    transition: transform 100ms, box-shadow 100ms;
-  }
-  &:is({{ WEB_COMPONENTS_PREFIX }}button)::part(base):hover {
-    box-shadow: var(--{{ WEB_COMPONENTS_PREFIX }}shadow-medium);
-    transform: scale(105%);
-  }
-  &:is({{ WEB_COMPONENTS_PREFIX }}button)::part(base):active {
-    box-shadow: inset var(--{{ WEB_COMPONENTS_PREFIX }}shadow-small);
-    transform: scale(100%);
-  }
-}
-.intro-content {
-	max-width: var(--content-width);
-	margin-inline: auto;
-	padding: var(--{{ WEB_COMPONENTS_PREFIX }}spacing-2x-large);
-}
-.intro-details {
-	display: flex;
-	align-items: center;
-	gap: 1.5rem;
-	flex-wrap: wrap;
-	background-color: var(--{{ WEB_COMPONENTS_PREFIX }}color-gray-200);
-	border-radius: 0.75rem;
-	font-size: 0.875rem;
-	padding: 1.5rem;
-}
-
-.summary-wrapper {
-	max-width: var(--content-width);
-	margin-block: var(--{{ WEB_COMPONENTS_PREFIX }}spacing-3x-large);
-	margin-inline: auto;
-}
-.summary {
-	background-color: var(--{{ WEB_COMPONENTS_PREFIX }}color-gray-200);
-	border-radius: 1.125rem;
-	color: white;
-	padding: var(--{{ WEB_COMPONENTS_PREFIX }}spacing-2x-large);
-}
-.summary {
-  & > * + * {
-    margin-block-start: 2rem;
-  }
-}
-.summary-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(min(30ch, 100%), 1fr));
-	gap: 2rem;
-}
-#order-button {
-  &::part(label) {
-    font-weight: bold;
-  }
-}
-
-.zoom-details {
-	display: flex;
-	gap: 1.5rem;
-	flex-direction: column;
-	background-color: var(--{{ WEB_COMPONENTS_PREFIX }}color-gray-200);
-	border-radius: 0.75rem;
-	font-size: 0.875rem;
-	padding: 1.5rem;
-}
-.zoom-link {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  padding: .5rem;
-  border-radius: var(--{{ WEB_COMPONENTS_PREFIX }}border-radius-large);
-  background-color: var(--{{ WEB_COMPONENTS_PREFIX }}color-gray-300);
-}
 
 .max-width-content-width {
   max-width: var(--content-width);
