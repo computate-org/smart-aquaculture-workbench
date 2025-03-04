@@ -234,7 +234,7 @@ main, footer {
   --menu-width: auto;
   --main-width: 1fr;
   --aside-width: auto;
-  --content-width: 56rem;
+  --content-width: 80ch;
   --content-flow-spacing: 3rem;
   --content-padding-inline: 2rem;
   --site-margin-block: var(--wa-space-m);

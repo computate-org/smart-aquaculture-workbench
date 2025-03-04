@@ -544,7 +544,7 @@ public class WorkerVerticle extends WorkerVerticleGen<AbstractVerticle> {
 {% endfor %}
 
 {% for JAVA_PAGE in JAVA_PAGES %}
-{% for n in range(loop.index) %}	{% endfor %}		api{{ JAVA_PAGE.classeNomSimple_enUS_stored_string }}.importTimer(Paths.get(templatePath, "{{ JAVA_PAGE.classeUriPageAffichage_enUS_stored_string | default(JAVA_PAGE.classeUriPageUtilisateur_enUS_stored_string) | regex_replace('\/[^\/]+$', '') }}"), vertx, siteRequest, {{ JAVA_PAGE.classeNomSimple_enUS_stored_string }}.CLASS_SIMPLE_NAME, {{ JAVA_PAGE.classeNomSimple_enUS_stored_string }}.CLASS_API_ADDRESS_{{ JAVA_PAGE.classeNomSimple_enUS_stored_string }}).onSuccess(q{{ loop.index }} -> {
+{% for n in range(loop.index) %}	{% endfor %}		api{{ JAVA_PAGE.classeNomSimple_enUS_stored_string }}.importTimer(Paths.get(templatePath, "{{ JAVA_PAGE.classeUriPageAffichage_enUS_stored_string | default(JAVA_PAGE.classeUriPageUtilisateur_enUS_stored_string) | regex_replace('\/[^\/]+$', '') }}"), vertx, siteRequest, {{ JAVA_PAGE.classeNomSimple_enUS_stored_string }}.CLASS_CANONICAL_NAME, {{ JAVA_PAGE.classeNomSimple_enUS_stored_string }}.CLASS_SIMPLE_NAME, {{ JAVA_PAGE.classeNomSimple_enUS_stored_string }}.CLASS_API_ADDRESS_{{ JAVA_PAGE.classeNomSimple_enUS_stored_string }}, "{{ JAVA_PAGE.classeVarId_enUS_stored_string }}", {{ ('"' + JAVA_PAGE.classeVarUrlPageUtilisateur_enUS_stored_string + '"') if JAVA_PAGE.classeVarUrlPageUtilisateur_enUS_stored_string is defined else 'null' }}).onSuccess(q{{ loop.index }} -> {
 {% endfor %}
 {% for n in range(JAVA_PAGES|length) %}	{% endfor %}			LOG.info("data import complete");
 {% for n in range(JAVA_PAGES|length) %}	{% endfor %}			promise.complete();
