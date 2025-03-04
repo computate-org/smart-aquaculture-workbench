@@ -1393,14 +1393,6 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 			{{ JAVA_MODEL.classeNomSimpleApiServiceImpl_enUS_stored_string }} api{{ JAVA_MODEL.classeNomSimple_enUS_stored_string }} = new {{ JAVA_MODEL.classeNomSimpleApiServiceImpl_enUS_stored_string }}();
 			initializeApiService(api{{ JAVA_MODEL.classeNomSimple_enUS_stored_string }});
 			registerApiService({{ JAVA_MODEL.classeNomSimpleGenApiService_enUS_stored_string }}.class, api{{ JAVA_MODEL.classeNomSimple_enUS_stored_string }}, {{ JAVA_MODEL.classeNomSimple_enUS_stored_string }}.getClassApiAddress());
-{% if JAVA_MODEL.classeUriPageAffichage_enUS_stored_string is defined %}
-{% if JAVA_MODEL.classeUriPageUtilisateur_enUS_stored_string is defined %}
-{% endif %}
-{% else %}
-{% if JAVA_MODEL.classeUriPageUtilisateur_enUS_stored_string is defined %}
-{% endif %}
-{% endif %}
-{% else %}
 {% endfor %}
 
 			Future.all(futures).onSuccess( a -> {
