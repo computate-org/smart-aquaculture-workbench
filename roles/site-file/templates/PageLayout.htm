@@ -50,7 +50,7 @@
         if(event.target.value == '')
           filters.push({ name: 'q', value: '*:*' });
         else
-          filters.push({ name: 'q', value: 'objectSuggest:' + event.target.value });
+          filters.push({ name: 'q', value: 'objectSuggest:' + event.target.value ? event.target.value : '' });
 
         fetch(
           '\{\{ USER_SEARCH_URI if userName is defined else PUBLIC_SEARCH_URI \}\}?' + filters.map(function(m) { return m.name + '=' + encodeURIComponent(m.value) }).join('&')
@@ -184,7 +184,7 @@
         </nav>
       </aside>
       <main>
-        <header{% if WEB_COMPONENTS_PREFIX == 'wa-' %} slot="header" class="margin-block "{% else %} class="margin-block flex gap-m align-items-center"{% endif %}>
+        <header{% if WEB_COMPONENTS_PREFIX == 'wa-' %} slot="header" class="margin-block-start "{% else %} class="margin-block-start flex gap-m align-items-center"{% endif %}>
           <{{ WEB_COMPONENTS_PREFIX }}icon-button data-toggle-nav name="bars" class="nav-toggle-button hide-desktop " label="open menu" appearance="text"></{{ WEB_COMPONENTS_PREFIX }}icon-button>
           <{{ WEB_COMPONENTS_PREFIX }}input placeholder="search" id="siteSearchInput">
             <i slot="prefix" class="{{ FONTAWESOME_STYLE }} fa-magnifying-glass"></i>
