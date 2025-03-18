@@ -16,8 +16,8 @@
 {% else %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.0/cdn/themes/dark.css" />
 {% endif %}
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css" />
+    <link rel="stylesheet" href="\{\{ STATIC_BASE_URL \}\}/css/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <link rel="stylesheet" href="\{\{ STATIC_BASE_URL \}\}/css/leaflet.draw.css" />
     <link rel="stylesheet" href="\{\{ STATIC_BASE_URL \}\}/css/leaflet.contextmenu.css"/>
     <link rel="stylesheet" href="\{\{ STATIC_BASE_URL \}\}/css/site.css"/>
 \{\%- endblock htmStylesPageLayout \%\}
@@ -50,7 +50,7 @@
         if(event.target.value == '')
           filters.push({ name: 'q', value: '*:*' });
         else
-          filters.push({ name: 'q', value: 'objectSuggest:' + event.target.value ? event.target.value : '' });
+          filters.push({ name: 'q', value: event.target.value ? 'objectSuggest:' + event.target.value : '' });
 
         fetch(
           '\{\{ USER_SEARCH_URI if userName is defined else PUBLIC_SEARCH_URI \}\}?' + filters.map(function(m) { return m.name + '=' + encodeURIComponent(m.value) }).join('&')
@@ -92,8 +92,8 @@
     <script src="\{\{ STATIC_BASE_URL \}\}/js/sockjs.js"></script>
     <script src="\{\{ STATIC_BASE_URL \}\}/js/vertx-eventbus.js"></script>
     <script src="\{\{ STATIC_BASE_URL \}\}/js/plotly-2.9.0.min.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+    <script src="\{\{ STATIC_BASE_URL \}\}/js/leaflet.js"></script>
+    <script src="\{\{ STATIC_BASE_URL \}\}/js/leaflet.draw.js"></script>
     <script src="\{\{ STATIC_BASE_URL \}\}/js/leaflet.contextmenu.js"></script>
 \{\%- endblock htmScriptsPageLayout \%\}
 \{\%- block htmScriptPageLayout \%\}
@@ -184,7 +184,7 @@
         </nav>
       </aside>
       <main>
-        <header{% if WEB_COMPONENTS_PREFIX == 'wa-' %} slot="header" class="margin-block-start "{% else %} class="margin-block-start flex gap-m align-items-center"{% endif %}>
+        <header{% if WEB_COMPONENTS_PREFIX == 'wa-' %} slot="header" class="{{ WEB_COMPONENTS_PREFIX }}-flank margin-block-start "{% else %} class="margin-block-start flex gap-m align-items-center"{% endif %}>
           <{{ WEB_COMPONENTS_PREFIX }}icon-button data-toggle-nav name="bars" class="nav-toggle-button hide-desktop " label="open menu" appearance="text"></{{ WEB_COMPONENTS_PREFIX }}icon-button>
           <{{ WEB_COMPONENTS_PREFIX }}input placeholder="search" id="siteSearchInput">
             <i slot="prefix" class="{{ FONTAWESOME_STYLE }} fa-magnifying-glass"></i>

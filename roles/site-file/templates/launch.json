@@ -18,7 +18,7 @@
     }
     , {
       "type": "java"
-      , "name": "rebuild API"
+      , "name": "rebuild {{ SITE_NAME }} API"
       , "request": "launch"
       , "mainClass": "{{ SITE_MAIN_VERTICLE_PACKAGE }}.MainVerticle"
       , "projectName": "{{ SITE_POM_ARTIFACT_ID }}"
@@ -28,7 +28,7 @@
         , "RUN_OPENAPI3_GENERATOR": "true"
         , "RUN_PROJECT_GENERATOR": "true"
         , "RUN_SQL_GENERATOR": "true"
-{% if WORKBENCH_ADMIN %}
+{% if lookup('env', 'WORKBENCH_ADMIN') == 'true' %}
         , "RUN_AUTHORIZATION_GENERATOR": "true"
 {% endif %}
 {% if ENABLE_FIWARE %}

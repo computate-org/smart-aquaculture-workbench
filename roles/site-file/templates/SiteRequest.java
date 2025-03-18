@@ -187,6 +187,13 @@ public class SiteRequest extends SiteRequestGen<Object> implements ComputateSite
 
 	/**
 	 * {@inheritDoc}
+	 * Description: The user groups for the current request within the SSO realm
+	 **/
+	protected void _groups(List<String> o) {
+	}
+
+	/**
+	 * {@inheritDoc}
 	 * Description: Whether the search results are public read. 
 	 **/
 	protected void _publicRead(Wrap<Boolean> w) {

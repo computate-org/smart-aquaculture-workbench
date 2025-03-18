@@ -313,8 +313,13 @@ public class WorkerVerticle extends WorkerVerticleGen<AbstractVerticle> {
 
 			pgPool = PgBuilder.pool().connectingTo(pgOptions).with(poolOptions).using(vertx).build();
 
-			LOG.info(configureDataInitSuccess);
-			promise.complete();
+			MainVerticle.configureDatabaseSchema(vertx, config()).onComplete(a -> {
+				LOG.info(configureDataInitSuccess);
+				promise.complete();
+			}).onFailure(ex -> {
+				LOG.error(configureDataInitError, ex);
+				promise.fail(ex);
+			});
 		} catch (Exception ex) {
 			LOG.error(configureDataInitError, ex);
 			promise.fail(ex);
