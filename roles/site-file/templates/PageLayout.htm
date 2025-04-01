@@ -106,7 +106,6 @@
   <body>
 
 {% if WEB_COMPONENTS_PREFIX == 'wa-' %}
-    <{{ WEB_COMPONENTS_PREFIX }}fade-in>
     <{{ WEB_COMPONENTS_PREFIX }}page disable-sticky="header">
 {% else %}
     <div id="site-grid">
@@ -114,14 +113,14 @@
 \{\%- block htmBodyPageLayout \%\}
 \{\%- block htmBodyStartPageLayout \%\}
 {% if WEB_COMPONENTS_PREFIX == 'wa-' %}
-      <aside class="main-sidebar" slot="navigation">
+      <nav class="main-sidebar" slot="navigation">
 {% else %}
       <aside id="site-aside-left" class="hide-mobile margin-block-end-1rem ">
         <{{ WEB_COMPONENTS_PREFIX }}button id="site-aside-left-close-button" label="Close" data-drawer="close" class="hide-desktop">
           <i slot="prefix" class="{{ FONTAWESOME_STYLE }} fa-xmark"></i>
         </{{ WEB_COMPONENTS_PREFIX }}button>
-{% endif %}
         <nav>
+{% endif %}
           <div class="display-flex-center ">
             <a href="/">
               <img id="site-aside-left-img-logo" src="\{\{ STATIC_BASE_URL \}\}\{\{ SITE_LOGO_URI \}\}"/>
@@ -181,10 +180,14 @@
 {% endfor %}
           </div>
 {% endif %}
+{% if WEB_COMPONENTS_PREFIX == 'wa-' %}
+      </nav>
+{% else %}
         </nav>
       </aside>
+{% endif %}
       <main>
-        <header{% if WEB_COMPONENTS_PREFIX == 'wa-' %} slot="header" class="{{ WEB_COMPONENTS_PREFIX }}-flank margin-block-start "{% else %} class="margin-block-start flex gap-m align-items-center"{% endif %}>
+        <header{% if WEB_COMPONENTS_PREFIX == 'wa-' %} slot="header" class="{{ WEB_COMPONENTS_PREFIX }}flank margin-block-start "{% else %} class="margin-block-start flex gap-m align-items-center"{% endif %}>
           <{{ WEB_COMPONENTS_PREFIX }}icon-button data-toggle-nav name="bars" class="nav-toggle-button hide-desktop " label="open menu" appearance="text"></{{ WEB_COMPONENTS_PREFIX }}icon-button>
           <{{ WEB_COMPONENTS_PREFIX }}input placeholder="search" id="siteSearchInput">
             <i slot="prefix" class="{{ FONTAWESOME_STYLE }} fa-magnifying-glass"></i>
@@ -225,7 +228,6 @@
       </footer>
 {% if WEB_COMPONENTS_PREFIX == 'wa-' %}
     </{{ WEB_COMPONENTS_PREFIX }}page>
-    </{{ WEB_COMPONENTS_PREFIX }}fade-in>
 {% else %}
     </div>
 {% endif %}
