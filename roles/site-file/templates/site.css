@@ -1220,7 +1220,7 @@ html, body {
     grid-row: 2;
   }
   .label-on-left::part(form-control-label) {
-    text-align: right;
+    text-align: left;
     grid-column: 1;
     grid-row: 2;
   }
