@@ -1180,6 +1180,9 @@ html, body {
   grid-column: 1/3;
   align-items: center;
 }
+.label-on-left-ul {
+  list-style-type: none;
+}
 @media (max-width:800px) {
   .label-on-left::part(form-control-label), {{ WEB_COMPONENTS_PREFIX }}button.button-on-left {
     grid-column: 1 / span 2;
@@ -1190,13 +1193,44 @@ html, body {
   .label-on-left::part(form-control-help-text) {
     grid-column: 1 / span 2;
   }
+  .label-on-left::part(hint) {
+    grid-column: 1 / span 2;
+  }
+  .label-on-left::part(input) {
+    grid-column: 1 / span 2;
+  }
+  .label-on-left-ul-label {
+    grid-column: 1 / span 2;
+  }
+  .label-on-left-ul {
+    grid-column: 1 / span 2;
+  }
 }
 @media (min-width:801px) {
-  .label-on-left::part(form-control-label), {{ WEB_COMPONENTS_PREFIX }}button.button-on-left {
+  .label-on-left::part(hint) {
+    grid-column: 1 / span 2;
+    grid-row: 1;
+  }
+  div.button-description-on-right {
+    grid-column: 1 / span 2;
+    grid-row: 1;
+  }
+  div.button-on-left {
+    grid-column: 1 / span 2;
+    grid-row: 2;
+  }
+  .label-on-left::part(form-control-label) {
     text-align: right;
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .label-on-left::part(input) {
+    grid-column: 2;
+    grid-row: 2;
   }
   .label-on-left::part(form-control-help-text) {
     grid-column: 2;
+    grid-row: 3;
   }
 }
 
