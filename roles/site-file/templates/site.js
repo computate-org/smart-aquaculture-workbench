@@ -61,9 +61,14 @@ function facetFieldChange(classSimpleName, elem) {
 
 function sort(classSimpleName, sortVar, sortOrder) {
 	if(sortOrder == '') {
-		document.querySelector("#pageSearchVal-pageSort-" + classSimpleName + "-" + sortVar).innerText = "";
+		document.querySelector(".pageSearchVal-pageSort-" + classSimpleName)?.remove();
 	} else {
-		document.querySelector("#pageSearchVal-pageSort-" + classSimpleName + "-" + sortVar).innerText = "sort=" + encodeURIComponent(sortVar) + " " + sortOrder;
+		var $listHidden = document.querySelector("#pageSearchVal-pageSort-" + classSimpleName);
+		var div = document.createElement("div");
+		div.setAttribute("id", "pageSearchVal-pageSort-" + classSimpleName + "-" + sortVar);
+		div.setAttribute("class", "pageSearchVal pageSearchVal-pageSort-" + classSimpleName);
+		div.innerText = "sort=" + encodeURIComponent(sortVar) + " " + sortOrder;
+		$listHidden.appendChild(div);
 	}
 	searchPage(classSimpleName);
 }
