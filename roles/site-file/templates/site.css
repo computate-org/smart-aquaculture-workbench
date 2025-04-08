@@ -1181,7 +1181,7 @@ html, body {
   list-style-type: none;
 }
 @media (max-width:800px) {
-  .label-on-left::part(form-control-label), {{ WEB_COMPONENTS_PREFIX }}button.button-on-left {
+  .label-on-left::part(label), {{ WEB_COMPONENTS_PREFIX }}button.button-on-left {
     grid-column: 1 / span 2;
   }
   .label-on-left::part(form-control-input), div.button-description-on-right {
