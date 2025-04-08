@@ -242,7 +242,7 @@ main, footer {
 
   /* Element variables */
   --main-logo-width: 300px;
-  --footer-logo-height: var(--wa-font-size-xl);
+  --footer-logo-height: var(--wa-font-size-l);
   --icon-button-size: 2rem;
 
   --site-primary-border-radius: var(--wa-border-radius-l);
@@ -251,8 +251,6 @@ main, footer {
 
   --site-primary-space: var(--wa-space-xl);
   --site-secondary-space: var(--wa-space-m);
-
-  body {margin: 0;}
 
   /********/
   /* Font */
@@ -290,7 +288,6 @@ main, footer {
     .main-content {
       max-width: var(--content-width);
       margin-inline: auto;
-      padding-inline: var(--content-padding-inline);
     }
 
     footer[slot="main-footer"] {
@@ -1180,6 +1177,9 @@ html, body {
   grid-column: 1/3;
   align-items: center;
 }
+.label-on-left-ul {
+  list-style-type: none;
+}
 @media (max-width:800px) {
   .label-on-left::part(form-control-label), {{ WEB_COMPONENTS_PREFIX }}button.button-on-left {
     grid-column: 1 / span 2;
@@ -1190,13 +1190,44 @@ html, body {
   .label-on-left::part(form-control-help-text) {
     grid-column: 1 / span 2;
   }
+  .label-on-left::part(hint) {
+    grid-column: 1 / span 2;
+  }
+  .label-on-left::part(input) {
+    grid-column: 1 / span 2;
+  }
+  .label-on-left-ul-label {
+    grid-column: 1 / span 2;
+  }
+  .label-on-left-ul {
+    grid-column: 1 / span 2;
+  }
 }
 @media (min-width:801px) {
-  .label-on-left::part(form-control-label), {{ WEB_COMPONENTS_PREFIX }}button.button-on-left {
-    text-align: right;
+  .label-on-left::part(hint) {
+    grid-column: 1 / span 2;
+    grid-row: 1;
+  }
+  div.button-description-on-right {
+    grid-column: 1 / span 2;
+    grid-row: 1;
+  }
+  div.button-on-left {
+    grid-column: 1 / span 2;
+    grid-row: 2;
+  }
+  .label-on-left::part(label) {
+    text-align: left;
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .label-on-left::part(input) {
+    grid-column: 2;
+    grid-row: 2;
   }
   .label-on-left::part(form-control-help-text) {
     grid-column: 2;
+    grid-row: 3;
   }
 }
 
@@ -1207,3 +1238,17 @@ html, body {
 .htmBodyGraphLocation {
   height: 40em;
 }
+
+
+/* not map */
+.cursor-pointer {cursor: pointer;}
+.raised-item {
+  background-color: var(--{{ WEB_COMPONENTS_PREFIX }}color-surface-lowered);
+  padding-inline: var(--wa-space-s);
+  &:hover {
+    background-color: var(--{{ WEB_COMPONENTS_PREFIX }}color-brand-fill-normal);
+  }
+}
+/* .pageFacetField {
+  border-radius: var(--{{ WEB_COMPONENTS_PREFIX }}border-radius-l);
+} */
