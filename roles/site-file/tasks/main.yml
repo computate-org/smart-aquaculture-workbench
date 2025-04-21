@@ -27,12 +27,20 @@
     url_password: "{{ SOLR_PASSWORD }}"
     validate_certs: false
   register: JAVA_PAGES_RESPONSE
-- name:
+- name: Query Apache Solr for all Java PUTImport APIs
+  uri:
+    url: "{{ SOLR_URL_COMPUTATE + '/select?rows=300&q=*:*&fq=partEstClasse_indexed_boolean:true&fq=siteNom_indexed_string:' + SITE_NAME + (('+OR+siteNom_indexed_string:' + SITE_POM_ARTIFACT_ID) if SITE_POM_ARTIFACT_ID is defined else '') + '&fq=classeApiMethodePUTImport_enUS_indexed_string:PUT&fq=-classeNomSimple_enUS_indexed_string:SiteUser&sort=classeOrdre_indexed_int%20asc' }}"
+    url_username: "{{ SOLR_USERNAME }}"
+    url_password: "{{ SOLR_PASSWORD }}"
+    validate_certs: false
+  register: JAVA_PUTIMPORTS_RESPONSE
+- name: "Set Java facts"
   set_fact:
     JAVA_AUTH_APIS: "{{ JAVA_AUTH_RESPONSE.json.response.docs }}"
     JAVA_MODELS: "{{ JAVA_MODELS_RESPONSE.json.response.docs }}"
     PUBLIC_MODELS: "{{ PUBLIC_MODELS_RESPONSE.json.response.docs }}"
     JAVA_PAGES: "{{ JAVA_PAGES_RESPONSE.json.response.docs }}"
+    JAVA_PUTIMPORTS: "{{ JAVA_PUTIMPORTS_RESPONSE.json.response.docs }}"
 - name: "Create the project file directory {{ FILE_PATH | dirname }}"
   file:
     state: directory
