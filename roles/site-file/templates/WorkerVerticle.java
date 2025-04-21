@@ -544,18 +544,18 @@ public class WorkerVerticle extends WorkerVerticleGen<AbstractVerticle> {
 			siteRequest.addScopes("GET");
 			String templatePath = config().getString(ComputateConfigKeys.TEMPLATE_PATH);
 
-{% for JAVA_PAGE in JAVA_PAGES %}
-			{{ JAVA_PAGE.classeNomSimpleApiServiceImpl_enUS_stored_string }} api{{ JAVA_PAGE.classeNomSimple_enUS_stored_string }} = new {{ JAVA_PAGE.classeNomSimpleApiServiceImpl_enUS_stored_string }}();
-			initializeApiService(api{{ JAVA_PAGE.classeNomSimple_enUS_stored_string }});
+{% for JAVA_PUTIMPORT in JAVA_PUTIMPORTS %}
+			{{ JAVA_PUTIMPORT.classeNomSimpleApiServiceImpl_enUS_stored_string }} api{{ JAVA_PUTIMPORT.classeNomSimple_enUS_stored_string }} = new {{ JAVA_PUTIMPORT.classeNomSimpleApiServiceImpl_enUS_stored_string }}();
+			initializeApiService(api{{ JAVA_PUTIMPORT.classeNomSimple_enUS_stored_string }});
 {% endfor %}
 
-{% for JAVA_PAGE in JAVA_PAGES %}
-{% for n in range(loop.index) %}	{% endfor %}		api{{ JAVA_PAGE.classeNomSimple_enUS_stored_string }}.importTimer(Paths.get(templatePath, "{{ JAVA_PAGE.classeUriPageAffichage_enUS_stored_string | default(JAVA_PAGE.classeUriPageUtilisateur_enUS_stored_string) | regex_replace('\/[^\/]+$', '') }}"), vertx, siteRequest, {{ JAVA_PAGE.classeNomSimple_enUS_stored_string }}.CLASS_CANONICAL_NAME, {{ JAVA_PAGE.classeNomSimple_enUS_stored_string }}.CLASS_SIMPLE_NAME, {{ JAVA_PAGE.classeNomSimple_enUS_stored_string }}.CLASS_API_ADDRESS_{{ JAVA_PAGE.classeNomSimple_enUS_stored_string }}, "{{ JAVA_PAGE.classeVarId_enUS_stored_string }}", {{ ('"' + JAVA_PAGE.classeVarUrlPageUtilisateur_enUS_stored_string + '"') if JAVA_PAGE.classeVarUrlPageUtilisateur_enUS_stored_string is defined else 'null' }}, {{ ('"' + JAVA_PAGE.classeVarUrlTelechargement_enUS_stored_string + '"') if JAVA_PAGE.classeVarUrlTelechargement_enUS_stored_string is defined else 'null' }}).onSuccess(q{{ loop.index }} -> {
+{% for JAVA_PUTIMPORT in JAVA_PUTIMPORTS %}
+{% for n in range(loop.index) %}	{% endfor %}		api{{ JAVA_PUTIMPORT.classeNomSimple_enUS_stored_string }}.importTimer(Paths.get(templatePath, "{{ JAVA_PUTIMPORT.classeUriPageAffichage_enUS_stored_string | default(JAVA_PUTIMPORT.classeUriPageUtilisateur_enUS_stored_string | default('')) | regex_replace('\/[^\/]+$', '') }}"), vertx, siteRequest, {{ JAVA_PUTIMPORT.classeNomSimple_enUS_stored_string }}.CLASS_CANONICAL_NAME, {{ JAVA_PUTIMPORT.classeNomSimple_enUS_stored_string }}.CLASS_SIMPLE_NAME, {{ JAVA_PUTIMPORT.classeNomSimple_enUS_stored_string }}.CLASS_API_ADDRESS_{{ JAVA_PUTIMPORT.classeNomSimple_enUS_stored_string }}, "{{ JAVA_PUTIMPORT.classeVarId_enUS_stored_string }}", {{ ('"' + JAVA_PUTIMPORT.classeVarUrlPageUtilisateur_enUS_stored_string + '"') if JAVA_PUTIMPORT.classeVarUrlPageUtilisateur_enUS_stored_string is defined else 'null' }}, {{ ('"' + JAVA_PUTIMPORT.classeVarUrlTelechargement_enUS_stored_string + '"') if JAVA_PUTIMPORT.classeVarUrlTelechargement_enUS_stored_string is defined else 'null' }}).onSuccess(q{{ loop.index }} -> {
 {% endfor %}
-{% for n in range(JAVA_PAGES|length) %}	{% endfor %}			LOG.info("data import complete");
-{% for n in range(JAVA_PAGES|length) %}	{% endfor %}			promise.complete();
-{% for JAVA_PAGE in JAVA_PAGES %}
-{% for n in range(JAVA_PAGES|length - loop.index) %}	{% endfor %}			}).onFailure(ex -> promise.fail(ex));
+{% for n in range(JAVA_PUTIMPORTS|length) %}	{% endfor %}			LOG.info("data import complete");
+{% for n in range(JAVA_PUTIMPORTS|length) %}	{% endfor %}			promise.complete();
+{% for JAVA_PUTIMPORT in JAVA_PUTIMPORTS %}
+{% for n in range(JAVA_PUTIMPORTS|length - loop.index) %}	{% endfor %}			}).onFailure(ex -> promise.fail(ex));
 {% endfor %}
 		}
 		else {
