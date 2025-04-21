@@ -1224,7 +1224,7 @@ html, body {
     grid-column: 1;
     grid-row: 2;
   }
-  .label-on-left::part(input) {
+  .label-on-left::part(input), .label-on-left::part(base) {
     grid-column: 2;
     grid-row: 2;
   }
