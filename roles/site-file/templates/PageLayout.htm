@@ -152,6 +152,18 @@
                   <span>sign out</span>
                 </{{ WEB_COMPONENTS_PREFIX }}button>
               </div>
+              <{{ WEB_COMPONENTS_PREFIX }}details summary="Current scopes" open="true">
+                <div class="{{ WEB_COMPONENTS_PREFIX }}stack ">
+                  <div>
+                    <{{ WEB_COMPONENTS_PREFIX }}tag variant="neutral">\{\{ pageUri \}\}</{{ WEB_COMPONENTS_PREFIX }}tag>
+                  </div>
+                  <div>
+                    \{\% for scope in scopes \%\}
+                    <{{ WEB_COMPONENTS_PREFIX }}badge variant="success">\{\{ scope \}\}</{{ WEB_COMPONENTS_PREFIX }}badge>
+                    \{\% endfor \%\}
+                  </div>
+                </div>
+              </{{ WEB_COMPONENTS_PREFIX }}details>
             </{{ WEB_COMPONENTS_PREFIX }}details>
 \{\%- else \%\}
             <{{ WEB_COMPONENTS_PREFIX }}button{% if WEB_COMPONENTS_PREFIX == 'wa-' %} variant="brand"{% else %}{% endif %} href="\{\{ SITE_BASE_URL \}\}/en-us/search/user">
