@@ -790,7 +790,7 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 				kafkaConfig.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 				kafkaConfig.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 				kafkaConfig.put("auto.offset.reset", "earliest");
-				kafkaConfig.put("enable.auto.commit", "false");
+				kafkaConfig.put("enable.auto.commit", "true");
 				Optional.ofNullable(config().getString(ConfigKeys.KAFKA_SSL_KEYSTORE_TYPE)).ifPresent(keystoreType -> {
 					kafkaConfig.put("ssl.keystore.type", keystoreType);
 					kafkaConfig.put("ssl.keystore.location", config().getString(ConfigKeys.KAFKA_SSL_KEYSTORE_LOCATION));
