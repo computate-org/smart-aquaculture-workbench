@@ -95,6 +95,7 @@
     <script src="\{\{ STATIC_BASE_URL \}\}/js/leaflet.js"></script>
     <script src="\{\{ STATIC_BASE_URL \}\}/js/leaflet.draw.js"></script>
     <script src="\{\{ STATIC_BASE_URL \}\}/js/leaflet.contextmenu.js"></script>
+    <script src="\{\{ STATIC_BASE_URL \}\}/js/moment.js"></script>
 \{\%- endblock htmScriptsPageLayout \%\}
 \{\%- block htmScriptPageLayout \%\}
 \{\%- endblock htmScriptPageLayout \%\}
@@ -103,7 +104,7 @@
 \{\%- block websocketPageLayout \%\}\{\%- endblock websocketPageLayout \%\}
     </script>
    </head>
-  <body>
+  <body class="wa-body-l wa-size-l ">
 
 {% if WEB_COMPONENTS_PREFIX == 'wa-' %}
     <{{ WEB_COMPONENTS_PREFIX }}page disable-sticky="header">
