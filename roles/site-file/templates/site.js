@@ -3,19 +3,28 @@
 // site //
 //////////
 
-function addGlow($input) {
+function addGlow($input, jqXhr) {
   $input.classList.add('glowSuccess');
   $input.classList.remove('glowError');
 }
 
-function removeGlow($input) {
+function removeGlow($input, jqXhr) {
   $input.classList.remove('glowSuccess');
   $input.classList.remove('glowError');
 }
 
-function addError($input) {
+function addError($input, jqXhr) {
   $input.classList.remove('glowSuccess');
   $input.classList.add('glowError');
+
+  if(jqXhr) {
+    $input.parentNode.querySelector('.alertPopup').setAttribute('variant', 'danger');
+    $input.parentNode.querySelector('.alertPopup').innerText = jqXhr.status + ' ' + jqXhr.statusText;
+    $input.parentNode.active = true;
+    jqXhr.json().then((json) => {
+      $input.parentNode.querySelector('.alertPopup').innerText += " " + JSON.stringify(json);
+    })
+  }
 }
 
 function paramChange(classSimpleName, input, div) {

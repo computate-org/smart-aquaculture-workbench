@@ -102,6 +102,9 @@ wa-card.purple-blue-background {
     }
   }
 }
+footer {
+  margin-block-start: 100px;
+}
 /* @media stuff */
 @media (max-width: 767px) {
   /* Mobile mode */
@@ -512,6 +515,10 @@ main, footer {
       }
     }
 
+    .popup-overview .box {
+      background: var(--wa-color-brand-fill-loud);
+      border-radius: var(--wa-border-radius-m);
+    }
 
     .footer-img {
       height: var(--footer-logo-height);

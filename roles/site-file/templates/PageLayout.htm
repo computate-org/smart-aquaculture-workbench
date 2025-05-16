@@ -173,14 +173,14 @@
 \{\%- endif \%\}
           </div>
 {% if WEB_COMPONENTS_PREFIX == 'wa-' %}
-          <div class="flex flex-column round-row primary-smart-border-radius margin-block">
+          <div>
 {% for JAVA_MODEL in JAVA_MODELS %}
             <{{ WEB_COMPONENTS_PREFIX }}button{% if WEB_COMPONENTS_PREFIX == 'wa-' %} variant="brand"{% else %}{% endif %} id="site-aside-left-model-button-{{ JAVA_MODEL.classeNomSimple_enUS_stored_string }}" href="\{\{ SITE_BASE_URL \}\}{{ JAVA_MODEL.classeApiUriSearchPage_enUS_stored_string }}">
               {{ JAVA_MODEL.classeIcone_stored_string | default('') }}
               {{ JAVA_MODEL.classeNomAdjectifPluriel_enUS_stored_string }}
             </{{ WEB_COMPONENTS_PREFIX }}button>
 {% endfor %}
-          </div>
+          </{{ WEB_COMPONENTS_PREFIX }}button-group>
 {% else %}
           <div class="flex flex-column round-first-and-last-row-x-large ">
 {% for JAVA_MODEL in JAVA_MODELS %}
@@ -212,33 +212,33 @@
         </{{ WEB_COMPONENTS_PREFIX }}dropdown>
 \{\%- endblock htmBodyStartPageLayout \%\}
 \{\% block htmBodyMiddlePageLayout \%\}
-        <div class="pageContent ">
+        <div class="pageContent {{ WEB_COMPONENTS_PREFIX }}stack {{ WEB_COMPONENTS_PREFIX }}gap ">
           put stuff here
         </div>
 \{\%- endblock htmBodyMiddlePageLayout \%\}
 \{\%- block htmBodyEndPageLayout \%\}
+        <footer class="flex flex-column round-row primary-smart-border-radius margin-block">
+          \{\% if GITHUB_ORG is defined \%\}
+          <a href="https://github.com/\{\{ GITHUB_ORG \}\}/\{\{ SITE_NAME \}\}/" target="_blank">
+            <{{ WEB_COMPONENTS_PREFIX }}card>
+              This site is <b><i class="fa-brands fa-github fa-xl"></i> open source</b>
+            </{{ WEB_COMPONENTS_PREFIX }}card>
+          </a>
+          \{\% endif \%\}
+          <a href="https://www.computate.org/" target="_blank" id="footer-generated-by">
+            <{{ WEB_COMPONENTS_PREFIX }}card>
+                Generated with <b><img class="footer-img" src="\{\{ STATIC_BASE_URL \}\}/svg/computate-keys.svg" alt="Computate"/></b>
+            </{{ WEB_COMPONENTS_PREFIX }}card>
+          </a>
+          \{\% if SITE_POWERED_BY_URL is defined \%\}
+          <a href="\{\{ SITE_POWERED_BY_URL \}\}" target="_blank" id="footer-powered-by">
+            <{{ WEB_COMPONENTS_PREFIX }}card>
+              Powered by <i class="fa-brands fa-redhat fa-xl" style="color: #ff0000;"></i> <b>\{\{ SITE_POWERED_BY_NAME | e \}\}</b>
+            </{{ WEB_COMPONENTS_PREFIX }}card>
+          </a>
+          \{\% endif \%\}
+        </footer>
       </main>
-      <footer class="flex flex-column round-row primary-smart-border-radius margin-block">
-        \{\% if GITHUB_ORG is defined \%\}
-        <a href="https://github.com/\{\{ GITHUB_ORG \}\}/\{\{ SITE_NAME \}\}/" target="_blank">
-          <{{ WEB_COMPONENTS_PREFIX }}card>
-            This site is <b><i class="fa-brands fa-github fa-xl"></i> open source</b>
-          </{{ WEB_COMPONENTS_PREFIX }}card>
-        </a>
-        \{\% endif \%\}
-        <a href="https://www.computate.org/" target="_blank" id="footer-generated-by">
-          <{{ WEB_COMPONENTS_PREFIX }}card>
-              Generated with <b><img class="footer-img" src="\{\{ STATIC_BASE_URL \}\}/svg/computate-keys.svg" alt="Computate"/></b>
-          </{{ WEB_COMPONENTS_PREFIX }}card>
-        </a>
-        \{\% if SITE_POWERED_BY_URL is defined \%\}
-        <a href="\{\{ SITE_POWERED_BY_URL \}\}" target="_blank" id="footer-powered-by">
-          <{{ WEB_COMPONENTS_PREFIX }}card>
-            Powered by <i class="fa-brands fa-redhat fa-xl" style="color: #ff0000;"></i> <b>\{\{ SITE_POWERED_BY_NAME | e \}\}</b>
-          </{{ WEB_COMPONENTS_PREFIX }}card>
-        </a>
-        \{\% endif \%\}
-      </footer>
 {% if WEB_COMPONENTS_PREFIX == 'wa-' %}
     </{{ WEB_COMPONENTS_PREFIX }}page>
 {% else %}

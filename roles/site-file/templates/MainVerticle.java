@@ -357,8 +357,10 @@ public class MainVerticle extends MainVerticleGen<AbstractVerticle> {
 {% for n in range(JAVA_AUTH_APIS|length) %}	{% endfor %}				LOG.info("authorize data complete");
 {% for n in range(JAVA_AUTH_APIS|length) %}	{% endfor %}				promise.complete();
 {% for JAVA_AUTH_API in JAVA_AUTH_APIS %}
+{% if JAVA_AUTH_API.classeAuthGroupes_enUS_stored_strings is defined or JAVA_AUTH_API.classeAuthClientPortees_enUS_stored_strings is defined %}
 {% set outer_loop = loop %}
 {% for n in range(JAVA_AUTH_APIS|length - outer_loop.index) %}	{% endfor %}				}).onFailure(ex -> promise.fail(ex));
+{% endif %}
 {% endfor %}
 			}).onFailure(ex -> promise.fail(ex));
 		} catch(Throwable ex) {
